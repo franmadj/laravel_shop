@@ -22,20 +22,45 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted, watch } from 'vue'
+import { ref, onMounted, onUnmounted, watch, reactive
+ } from 'vue'
 import FilePreview from './FilePreview.vue'
+import helpers from '../../compositions/helpers'
 const emit = defineEmits(['any-files-update', 'files-updated'])
 const props = defineProps({
-	filesDefault: { type: Array, default: [] }
+	filesDefault: { type: Array, default: [] },
+	maxFiles: { type: Number, default: 1 },
+	test: { type: Number, default: 10 }
 })
+
+
 
 let active = ref(false)
 let inActiveTimeout = null
 
 
-watch(props.filesDefault, (currentValue, oldValue) => {
-	files.value=[];
-	addFiles(currentValue)
+// watch(props, (currentValue, oldValue) => {
+
+// 	console.log('test: ', currentValue)
+// });
+
+
+
+
+watch(props.filesDefault, (urls) => {
+	console.log('watch(props.filesDefault');
+	console.log('urls: ',urls);
+	//files = [];
+	let list = new DataTransfer();
+	urls.forEach((url, i) => {
+		helpers.getFileFromUrl(url, i + '_name.png')
+			.then(file => {
+				list.items.add(file);
+				//console.log('list.items.add', file);
+				console.log('list.files: ',list.files)
+				addFiles(list.files)
+			})
+	})
 });
 
 // setActive and setInactive use timeouts, so that when you drag an item over a child element,
@@ -52,32 +77,33 @@ function setInactive() {
 }
 
 function onDrop(e) {
+	console.log('onDrop');
+	console.log('e.dataTransfer.files: ',e.dataTransfer.files);
 	setInactive()
-	addFiles([...e.dataTransfer.files])
+	addFiles(e.dataTransfer.files)
 	emit('files-updated', files)
-	emit('any-files-update',true)
+	emit('any-files-update', true)
 	//emit('files-dropped', [...e.dataTransfer.files])
 }
 
 function onInputChange(e) {
+	console.log('onInputChange');
+	console.log('e.target.files',e.target.files);
 	addFiles(e.target.files)
-	emit('files-updated', e.target.files)
-	emit('any-files-update',true)
+	emit('files-updated', files)
+	emit('any-files-update', true)
 	e.target.value = null // reset so that selecting the same file again will still cause it to fire this change
 }
 
 function preventDefaults(e) {
 	e.preventDefault()
 }
-
 const events = ['dragenter', 'dragover', 'dragleave', 'drop']
-
-onMounted(() => { 
+onMounted(() => {
 	events.forEach((eventName) => {
 		document.body.addEventListener(eventName, preventDefaults)
 	})
 })
-
 onUnmounted(() => {
 	events.forEach((eventName) => {
 		document.body.removeEventListener(eventName, preventDefaults)
@@ -88,25 +114,44 @@ onUnmounted(() => {
 
 
 
-const files = ref([])
+let files = reactive([])
+
+
+
+let sss=files
+
+console.log('sss',sss);
+
+
 const filesEdit = ref([])
+
+
 function addFiles(newFiles) {
-	//console.log(newFiles);
-	if (files.value.length > 0)
+	console.log('addFiles');
+	console.log('files.value.length: ',files.length);
+	if (files.length > (props.maxFiles - 1))
 		return;
+	console.log('files.value.length > (props.maxFiles - 1)');
+	console.log('newFiles: ',newFiles);
 	let newUploadableFiles = [...newFiles].map((file) => new UploadableFile(file)).filter((file) => !fileExists(file.id))
-	files.value = files.value.concat(newUploadableFiles)
+
+	newUploadableFiles.forEach((uploadedFile)=>{
+		files.push(uploadedFile)
+
+	})
+	console.log('files.concat(newUploadableFiles)',files,files.length);
 }
 
 function fileExists(otherId) {
-	return files.value.some(({ id }) => id === otherId)
+	return files.some(({ id }) => id === otherId)
 }
 
 function removeFile(file) {
-	const index = files.value.indexOf(file)
+	const index = files.indexOf(file)
 
-	if (index > -1) files.value.splice(index, 1)
-	emit('any-files-update',true)
+	if (index > -1) files.splice(index, 1)
+	emit('files-updated', files)
+	emit('any-files-update', true)
 }
 class UploadableFile {
 	constructor(file) {

@@ -1,9 +1,11 @@
 <template>
-    <Header/>
-    <div class="flex">
+    
+    <div class="block lg:flex" v-if="isLoggedIn">
         <SidebarMenu/>
         <router-view></router-view>
-        
+    </div>
+    <div v-else>
+        <router-view></router-view>
     </div>
     
 </template>
@@ -21,21 +23,4 @@ onMounted(() => {
 
 })
 
-/*
-export default {
-    name: "App",
-    data() {
-        return {
-            isLoggedIn: false,
-        }
-    },
-    created() {
-        if (window.Laravel.isLoggedin) {
-            this.isLoggedIn = true
-        }
-    },
-    methods: {
-
-    },
-}*/
 </script>

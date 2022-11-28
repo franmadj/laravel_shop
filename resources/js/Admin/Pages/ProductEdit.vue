@@ -1,7 +1,8 @@
 <template>
     <GlobalTransition>
         <div v-if="show" class="min-h-screen p-6 grow overflow-hidden">
-            <h1 class="text-3xl font-bold mb-3 uppercase text-gray-600">Add Product</h1>
+            <h1 class="text-3xl font-bold mb-3 uppercase text-gray-600"><span v-if="editing">Edit</span><span
+                    v-else>Add</span> Product</h1>
 
             <form class="flex flex-col lg:flex-row gap-5">
 

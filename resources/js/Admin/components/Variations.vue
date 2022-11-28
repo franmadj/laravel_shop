@@ -95,7 +95,7 @@
 import { ref, onMounted, watch, reactive } from 'vue'
 import { createToaster } from "@meforma/vue-toaster"
 import { createConfirmDialog } from 'vuejs-confirm-dialog'
-import ConfirmVariationReset from './ConfirmVariationReset.vue'
+import CustomModal from './CustomModal.vue'
 import ConfirmDialog from '../../components/ConfirmDialog.vue'
 import helpers from '../../compositions/helpers'
 

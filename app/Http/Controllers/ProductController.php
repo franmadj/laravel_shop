@@ -106,7 +106,7 @@ class ProductController extends Controller
                 if (empty($variation['id'])) {
                     if ($variation['added'] && !empty($variation['items']) && is_array($variation['items']) && !empty($variation['items'][0]['id'])) {
 
-                        $newVariation = $product->variations()->create(Arr::except($variation['data'],['stock_status']));
+                        $newVariation = $product->variations()->create(Arr::except($variation['data'], ['stock_status']));
                         $variation['id'] = $newVariation->id;
                         foreach ($variation['items'] as $item) {
                             $attrItems = collect($variation['items'])->pluck('id');
@@ -117,8 +117,8 @@ class ProductController extends Controller
                     }
 
                 } elseif (!empty($variation['updated']) && 'save' == $variation['action']) {
-        
-                    $product->variations()->where('id', $variation['id'])->update(Arr::except($variation['data'],['stock_status']));
+
+                    $product->variations()->where('id', $variation['id'])->update(Arr::except($variation['data'], ['stock_status']));
                     $variation['updated'] = false;
                     $variation['action'] = 'none';
 
@@ -130,17 +130,14 @@ class ProductController extends Controller
 
             }
             //$update=$product->update(['variations' => json_encode($variations)]);
-            $product->variations=json_encode($variations);
-            $update=$product->save();
-     
+            $product->variations = json_encode($variations);
+            $update = $product->save();
+
         }
 
         return responder()->success()->respond(201);
 
-        
-
     }
-
 
     /**
      * Display the specified resource.
@@ -175,15 +172,23 @@ class ProductController extends Controller
     {
         $validated = $request->validated();
         if ($product->update($validated)) {
-            $file = request()->file('file');
-            if (isset($file) && !empty($file) && $file->isValid()) {
-                $product->clearMediaCollection()
-                    ->addMedia($file)
-                    ->usingName('image')
-                    ->toMediaCollection();
-            } elseif (request('clearFiles')) {
+
+            $files = request('files', []);
+            if (!empty($files) && is_array($files)) {
+                $product->clearMediaCollection();
+                foreach ($files as $file) {
+                    if (isset($file) && !empty($file) && $file->isValid()) {
+                        $product
+                            ->addMedia($file)
+                            ->usingName('image')
+                            ->toMediaCollection();
+                    } 
+
+                }
+            }elseif (request('clearFiles')) {
                 $product->clearMediaCollection();
             }
+
             if ($request->has('categories') and is_array($request->categories)) {
                 $product->categories()->detach();
                 $product->categories()->attach(collect($request->categories));

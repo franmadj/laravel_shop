@@ -6,8 +6,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
-use Spatie\Image\Manipulations;
-use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class Product extends Model implements HasMedia
 {
@@ -30,13 +28,25 @@ class Product extends Model implements HasMedia
         'stock_quantity',
     ];
 
-    function categories(){
+    public function categories()
+    {
         return $this->belongsToMany(Category::class);
     }
 
-    
-
-    function variations(){
+    public function variations()
+    {
         return $this->hasMany(Variation::class);
+    }
+
+    public function getAllImagesAttribute()
+    {
+        $images = $this->getMedia();
+        //dd($images);
+        $imageUrls = [];
+        foreach ($images as $image) {
+            $imageUrls[] = $image->getFullUrl();
+
+        }
+        return $imageUrls;
     }
 }

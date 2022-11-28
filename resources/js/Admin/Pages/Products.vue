@@ -58,39 +58,42 @@
                                     </th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr v-for="(product) of products" :key="product.id" class="bg-white border-b">
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                        <img v-if="product.image" class="rounded-md w-[50px]" :src="product.image">
-                                    </td>
-                                    <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                        {{ product.title }}
-                                    </td>
-                                    <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                        {{ product.price }}$
-                                    </td>
-                                    <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                        {{ product.type }}
-                                    </td>
-                                    <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                        {{ product.status }}
-                                    </td>
-                                    <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"
-                                        v-html="product.categories_text">
+                            <GlobalTransition>
+                                <tbody v-if="products.length">
+                                    <tr v-for="(product) of products" :key="product.id" class="bg-white border-b">
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                            <img v-if="product.image" class="rounded-md w-[50px]" :src="product.image">
+                                        </td>
+                                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                                            {{ product.title }}
+                                        </td>
+                                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                                            {{ product.price }}$
+                                        </td>
+                                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                                            {{ product.type }}
+                                        </td>
+                                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                                            {{ product.status }}
+                                        </td>
+                                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"
+                                            v-html="product.categories_text">
 
-                                    </td>
-                                    <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                        <div class="flex justify-center gap-1">
-                                            <button type="button" @click="confirmDelete(product.id)"
-                                                class="px-3 py-1 bg-red-500 block w-fit rounded-sm text-white">Delete</button>
-                                            <button type="button" @click="$router.push('/admin/product/' + product.id)"
-                                                class="px-3 py-1 bg-green-500 block w-fit rounded-sm text-white">Edit</button>
-                                        </div>
-                                    </td>
-                                </tr>
+                                        </td>
+                                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                                            <div class="flex justify-center gap-1">
+                                                <button type="button" @click="confirmDelete(product.id)"
+                                                    class="px-3 py-1 bg-red-500 block w-fit rounded-sm text-white">Delete</button>
+                                                <button type="button"
+                                                    @click="$router.push('/admin/product/' + product.id)"
+                                                    class="px-3 py-1 bg-green-500 block w-fit rounded-sm text-white">Edit</button>
+                                            </div>
+                                        </td>
+                                    </tr>
 
 
-                            </tbody>
+                                </tbody>
+                            </GlobalTransition>
                         </table>
                     </div>
                 </div>
@@ -106,6 +109,7 @@ import { createConfirmDialog } from 'vuejs-confirm-dialog'
 
 import helpers from '../../compositions/helpers'
 import ConfirmDialog from '../../components/ConfirmDialog.vue'
+import GlobalTransition from '../../Transitions/GlobalTransition.vue'
 
 const toaster = createToaster({ position: "top" });
 const dialog = createConfirmDialog(ConfirmDialog, { msg: 'Do you wnat to remove this item?' })
@@ -179,6 +183,9 @@ const deleteProduct = (id) => {
 }
 </script>
 
+<style scoped>
 
+
+</style>
 
 

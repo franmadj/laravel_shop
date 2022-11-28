@@ -1,4 +1,31 @@
 import { createWebHistory, createRouter } from "vue-router";
+const Product = () =>
+    import ('../Admin/Pages/Product.vue')
+const ProductEdit = () =>
+    import ('../Admin/Pages/ProductEdit.vue')
+const Products = () =>
+    import ('../Admin/Pages/Products.vue')
+const Dashboard = () =>
+    import ('../Admin/Pages/Dashboard.vue')
+const Categories = () =>
+    import ('../Admin/Pages/Categories.vue')
+const Attributes = () =>
+    import ('../Admin/Pages/Attributes.vue')
+const Orders = () =>
+    import ('../Admin/Pages/Orders.vue')
+const Users = () =>
+    import ('../Admin/Pages/Users.vue')
+const AddUser = () =>
+    import ('../Admin/Pages/AddUser.vue')
+const Account = () =>
+    import ('../Admin/Pages/Account.vue')
+const Login = () =>
+    import ('../Auth/Login.vue')
+const Register = () =>
+    import ('../Auth/Register.vue')
+const ShopProduct = () =>
+    import ('../Shop/Pages/ShopProduct.vue')
+    /*
 import Product from '../Admin/Pages/Product.vue'
 import Products from '../Admin/Pages/Products.vue'
 import Dashboard from '../Admin/Pages/Dashboard.vue'
@@ -13,7 +40,7 @@ import Login from '../Auth/Login.vue'
 import Register from '../Auth/Register.vue'
 
 import ShopProduct from '../Shop/Pages/ShopProduct.vue'
-
+*/
 export const routes = [{
         path: '/shop',
         component: Dashboard,
@@ -41,7 +68,7 @@ export const routes = [{
     },
     {
         path: '/admin/product/:id',
-        component: Product,
+        component: ProductEdit,
         props: true,
         meta: {
             requiresAuth: true
