@@ -524,22 +524,22 @@ var _hoisted_19 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElement
   "class": "border-b bg-gray-800"
 }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", {
   scope: "col",
-  "class": "text-sm font-medium text-white px-6 py-4"
+  "class": "text-sm font-medium text-white px-6 py-4 hidden sm:table-cell"
 }), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", {
   scope: "col",
   "class": "text-sm font-medium text-white px-6 py-4"
 }, " Title "), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", {
   scope: "col",
-  "class": "text-sm font-medium text-white px-6 py-4"
+  "class": "text-sm font-medium text-white px-6 py-4 hidden sm:table-cell"
 }, " Price "), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", {
   scope: "col",
-  "class": "text-sm font-medium text-white px-6 py-4"
+  "class": "text-sm font-medium text-white px-6 py-4 hidden md:table-cell"
 }, " Type "), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", {
   scope: "col",
-  "class": "text-sm font-medium text-white px-6 py-4"
+  "class": "text-sm font-medium text-white px-6 py-4 hidden md:table-cell"
 }, " Status "), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", {
   scope: "col",
-  "class": "text-sm font-medium text-white px-6 py-4"
+  "class": "text-sm font-medium text-white px-6 py-4 hidden md:table-cell"
 }, " Categories "), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", {
   scope: "col",
   "class": "text-sm font-medium text-white px-6 py-4"
@@ -551,20 +551,20 @@ var _hoisted_20 = {
   key: 0
 };
 var _hoisted_21 = {
-  "class": "px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"
+  "class": "px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 hidden sm:table-cell"
 };
 var _hoisted_22 = ["src"];
 var _hoisted_23 = {
   "class": "text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"
 };
 var _hoisted_24 = {
-  "class": "text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"
+  "class": "text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap hidden sm:table-cell"
 };
 var _hoisted_25 = {
-  "class": "text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"
+  "class": "text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap hidden md:table-cell"
 };
 var _hoisted_26 = {
-  "class": "text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"
+  "class": "text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap hidden md:table-cell"
 };
 var _hoisted_27 = ["innerHTML"];
 var _hoisted_28 = {
@@ -631,10 +631,10 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", {
           key: product.id,
           "class": "bg-white border-b"
-        }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_21, [product.image ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("img", {
+        }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_21, [product.feature_image ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("img", {
           key: 0,
           "class": "rounded-md w-[50px]",
-          src: product.image
+          src: product.feature_image
         }, null, 8
         /* PROPS */
         , _hoisted_22)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_23, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(product.title), 1
@@ -646,7 +646,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_26, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(product.status), 1
         /* TEXT */
         ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
-          "class": "text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap",
+          "class": "text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap hidden md:table-cell",
           innerHTML: product.categories_text
         }, null, 8
         /* PROPS */

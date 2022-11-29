@@ -1,8 +1,7 @@
 <template>
     <GlobalTransition>
         <div v-if="show" class="min-h-screen p-6 grow overflow-hidden">
-            <h1 class="text-3xl font-bold mb-3 uppercase text-gray-600"><span v-if="editing">Edit</span><span
-                    v-else>Add</span> Product</h1>
+            <h1 class="text-3xl font-bold mb-3 uppercase text-gray-600">Edit Product</h1>
 
             <form class="flex flex-col lg:flex-row gap-5">
 
@@ -34,7 +33,7 @@
                             class="min-h-2 p-2 border rounded-sm shadow-sm block w-full"></textarea>
                     </div>
 
-                    <div class="mb-4 lg:flex flex-col justify-between gap-2">
+                    <div class="mb-4 block lg:flex justify-between gap-2">
                         <div class="grow">
                             <label>Price:</label>
                             <input v-model="product.price" type="text"
@@ -46,7 +45,7 @@
                                 class="p-2 border rounded-sm shadow-sm block w-full">
                         </div>
                     </div>
-                    <div class="mb-4 lg:flex flex-col justify-between gap-2">
+                    <div class="mb-4 block lg:flex justify-between gap-2">
                         <div class="grow w-full lg:w-2/5">
                             <label>Stock status:</label>
                             <select v-model="product.stock_status" class="p-2 border rounded-sm shadow-sm block w-full">
@@ -61,23 +60,19 @@
                         </div>
                     </div>
 
+                    <div class="mb-4">
+                        <p class="text-2xl">Gallery</p>
+                        <FileUploader v-if="galleryon" @files-updated="galleryUpdated" @any-files-update="anyGalleryUpdate"
+                            :filesDefault="galleryDefault" :maxFiles="5" name="gallery" />
+                    </div>
+
 
 
                     <!--VARIATIONS-->
                     <div class="mb-4" v-if="product.type == 'variable'">
                         <p class="text-2xl">Variations</p>
-
-                        <div v-if="!editing" class="border border-gray-400 rounded-sm p-2 mt-2">
-                            <button type="button" class="px-2 py-1 bg-gray-800 block w-full rounded-sm text-white"
-                                @click="store">Save product before add variations</button>
-                        </div>
-
-                        <Variations :productId="props.id" :variations="product.variations" v-else />
-
-
-
+                        <Variations :productId="props.id" :variations="product.variations" />
                     </div>
-
                 </div>
                 <!--RIGHT SIDE -->
                 <div class="w-full lg:w-1/5">
@@ -107,13 +102,11 @@
                     <div class="mb-4">
                         <p class="text-2xl">Image</p>
                         <FileUploader @files-updated="filesUpdated" @any-files-update="anyFilesUpdate"
-                            :filesDefault="filesDefault" :maxFiles="3" />
+                            :filesDefault="filesDefault" :maxFiles="1" name="featureImage" />
                     </div>
 
-                    <button v-if="!editing" class="px-2 py-1 bg-blue-700 block w-full rounded-sm text-white"
-                        type="button" @click="store()">Save
-                        Product</button>
-                    <button v-else class="px-2 py-1 bg-blue-700 block w-full rounded-sm text-white" type="button"
+                    
+                    <button class="px-2 py-1 bg-blue-700 block w-full rounded-sm text-white" type="button"
                         @click="update()">Update
                         Product</button>
 
@@ -131,30 +124,28 @@ import { createToaster } from "@meforma/vue-toaster"
 import { createConfirmDialog } from 'vuejs-confirm-dialog'
 
 import Variations from '../components/Variations.vue'
+import pFns from '../composables/products'
 import helpers from '../../compositions/helpers'
 import ConfirmDialog from '../../components/ConfirmDialog.vue'
 import FileUploader from '../components/FileUploader.vue'
-
 import GlobalTransition from '../../Transitions/GlobalTransition.vue'
 
 const show = ref(false);
 const toaster = createToaster({ position: "top" });
 const dialog = createConfirmDialog(ConfirmDialog)
 const product = ref({ type: 'simple', status: 'published', stock_status: 'in_stock', selectedCategories: [] })
-
 let categories = ref([])
-let editing = ref(false)
 let filesDefault = reactive([])
+let galleryDefault = reactive([])
+
+let galleryon=ref(true)
 
 
 
 onMounted(() => {
-    populateCategories();
+    pFns.populateCategories().then((res) => categories.value = res)
     if (props.id) {
-        editing.value = props.id;
-        //console.log(props.id);
         edit(props.id);
-
     }
     show.value=true
 
@@ -176,80 +167,18 @@ const filesUpdated = (files) => {
     product.value.files = [...files];
     console.log('filesUpdated', product.value.files);
 }
+const galleryUpdated = (files) => {
+    console.log(files);
+    product.value.galleryImages = [...files];
+    console.log('galleryUpdated', product.value.galleryImages);
+}
 const anyFilesUpdate = () => {
     product.value.clearFiles = true;
 }
-
-
-
-
-
-
-const populateCategories = async () => {
-    axios.get('/api/admin/category')
-        .then(response => {
-            if (response.data.success) {
-                //console.log(response.data.data);
-                categories.value = response.data.data
-            } else {
-                toaster.error(`Error Getting categories`);
-            }
-        })
-        .catch(function (error) {
-            toaster.error(error);
-        });
+const anyGalleryUpdate = () => {
+    product.value.clearGallery = true;
 }
 
-const store = async () => {
-
-    let formData = new FormData()
-    formData.append('title', product.value.title)
-    formData.append('type', product.value.type)
-    formData.append('price', product.value.price)
-    formData.append('slug', product.value.slug)
-    formData.append('stock_status', product.value.stock_status)
-    formData.append('status', product.value.status)
-
-    if (product.value.content)
-        formData.append('content', product.value.content)
-    if (product.value.sale_price)
-        formData.append('sale_price', product.value.sale_price)
-    if (product.value.stock_quantity)
-        formData.append('stock_quantity', product.value.stock_quantity)
-    if (product.value.selectedCategories) {
-        product.value.selectedCategories.forEach((selCat, i) => {
-            if (selCat)
-                formData.append('categories[]', i)
-        })
-    }
-
-
-    if (product.value.files.length) {
-        product.value.files.forEach((file) => {
-            console.log('file.value', file.file);
-            formData.append('files[]', file.file)
-        })
-    }
-
-
-
-
-    axios.post('/api/admin/product', formData)
-        .then(response => {
-            if (response.data.success) {
-
-                resetForm();
-                toaster.success(`Product saved`);
-            } else {
-                toaster.error(`Error`);
-            }
-        })
-        .catch(function (error) {
-            toaster.error(helpers.makeTextErrors(error));
-        });
-
-
-}
 
 const edit = async (id) => {
     await axios.get('/api/admin/product/' + id)
@@ -263,19 +192,16 @@ const edit = async (id) => {
                 console.log('DATA EDIT: ', { ...res.data.data, selectedCategories });
                 product.value = { ...res.data.data, selectedCategories };
 
-                if (res.data.data.images) {
-                    //console.log('filesDefault')
-                    //filesDefault=res.data.data.images
-                    res.data.data.images.forEach((url) => {
-                        filesDefault.push(url)
-
-                    })
-                    //console.log('filesDefault')
-
+                if (res.data.data.feature_image) {
+                    filesDefault.push(res.data.data.feature_image)
                 }
-                // helpers.getFileFromUrl(res.data.data.image, 'name.png').then(file => {
-                //     filesDefault.value.push(file)
-                // })
+
+                if (res.data.data.gallery) {
+                    res.data.data.gallery.forEach((url) => {
+                        galleryDefault.push(url)
+                    })
+                }
+
 
 
             } else {
@@ -289,7 +215,6 @@ const edit = async (id) => {
 
 const resetForm = async () => {
     product.value = { type: 'simple', status: 'published', stock_status: 'in_stock', selectedCategories: [] };
-    editing.value = false;
 }
 
 const update = async () => {
@@ -297,6 +222,7 @@ const update = async () => {
 
     console.log('product.value', product.value);
 
+   
     let formData = new FormData()
     formData.append('title', product.value.title)
     formData.append('type', product.value.type)
@@ -319,18 +245,25 @@ const update = async () => {
         }
     }
 
-    if (product.value.files.length) {
+    if (product.value.files && product.value.files.length) {
         product.value.files.forEach((file) => {
-            console.log('file.value', file.file);
+            console.log('file.file', file.file);
             formData.append('files[]', file.file)
         })
     } else if (product.value.clearFiles) {
         formData.append('clearFiles', true)
     }
 
+    if (product.value.galleryImages && product.value.galleryImages.length) {
+        product.value.galleryImages.forEach((file) => {
+            console.log('file.file', file.file);
+            formData.append('gallery[]', file.file)
+        })
+    }else if (product.value.clearGallery) {
+        formData.append('clearGallery', true)
+    }
 
-
-    axios.post('/api/admin/product/' + editing.value, formData)
+    axios.post('/api/admin/product/' + props.id, formData)
         .then(response => {
             if (response.data.success) {
 

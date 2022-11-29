@@ -41,8 +41,8 @@ class ProductTransformer extends Transformer
             'sale_price' => $product->sale_price,
             'stock_status' => $product->in_stock ? 'in_stock' : 'out_stock',
             'stock_quantity' => $product->stock_quantity,
-            'image' => $product->getFirstMediaUrl(),
-            'images' => $product->all_images,
+            'feature_image' => $product->getFirstMediaUrl(),
+            'gallery' => $product->gallery,
             'categories' => $categories->toArray(),
             'categories_text' => implode(' <br/> ', $categories->pluck('name')->toArray()),
             'variations' => $product->variations

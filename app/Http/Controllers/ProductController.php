@@ -65,16 +65,39 @@ class ProductController extends Controller
         $validated['in_stock'] = $request->stock_status == 'in_stock';
         //dd($validated);
         if ($product = Product::create($validated)) {
-            $file = request()->file('file');
-            if (isset($file) && !empty($file) && $file->isValid()) {
-                $product->addMedia($file)
-                    ->usingName('image')
-                    ->toMediaCollection();
+            $files = request('files', []);
+            if (!empty($files) && is_array($files)) {
+                foreach ($files as $file) {
+                    if (isset($file) && !empty($file) && $file->isValid()) {
+                        $product
+                            ->addMedia($file)
+                            ->usingName('image')
+                            ->toMediaCollection();
+                    } 
+
+                }
             }
+
+
+            $gallery = request('gallery', []);
+            if (!empty($gallery) && is_array($gallery)) {
+                $product->clearMediaCollection('gallery');
+                foreach ($gallery as $image) {
+                    if (isset($image) && !empty($image) && $image->isValid()) {
+                        $product
+                            ->addMedia($image)
+                            ->usingName('gallery_image')
+                            ->toMediaCollection('gallery');
+                    } 
+
+                }
+            }
+
+            
             if ($request->has('categories') and is_array($request->categories)) {
                 $product->categories()->attach(collect($request->categories));
             }
-            return responder()->success(Product::all(), ProductTransformer::class)->respond(201);
+            return responder()->success(['id'=>$product->id])->respond(201);
         }
         return responder()->error()->respond();
 
@@ -188,6 +211,24 @@ class ProductController extends Controller
             }elseif (request('clearFiles')) {
                 $product->clearMediaCollection();
             }
+
+
+            $gallery = request('gallery', []);
+            if (!empty($gallery) && is_array($gallery)) {
+                $product->clearMediaCollection('gallery');
+                foreach ($gallery as $image) {
+                    if (isset($image) && !empty($image) && $image->isValid()) {
+                        $product
+                            ->addMedia($image)
+                            ->usingName('gallery_image')
+                            ->toMediaCollection('gallery');
+                    } 
+
+                }
+            }elseif (request('clearGallery')) {
+                $product->clearMediaCollection('gallery');
+            }
+
 
             if ($request->has('categories') and is_array($request->categories)) {
                 $product->categories()->detach();

@@ -1,5 +1,5 @@
 <template>
-	<component :is="tag" class="file-preview">
+	<component :is="tag" class="file-preview grow">
 		<button @click="$emit('remove', file)" class="close-icon">&times;</button>
 		<img :src="file.url" :alt="file.file.name" :title="file.file.name" />
 

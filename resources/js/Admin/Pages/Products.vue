@@ -34,22 +34,22 @@
                         <table class="min-w-full text-center">
                             <thead class="border-b bg-gray-800">
                                 <tr>
-                                    <th scope="col" class="text-sm font-medium text-white px-6 py-4">
+                                    <th scope="col" class="text-sm font-medium text-white px-6 py-4 hidden sm:table-cell">
 
                                     </th>
                                     <th scope="col" class="text-sm font-medium text-white px-6 py-4">
                                         Title
                                     </th>
-                                    <th scope="col" class="text-sm font-medium text-white px-6 py-4">
+                                    <th scope="col" class="text-sm font-medium text-white px-6 py-4 hidden sm:table-cell">
                                         Price
                                     </th>
-                                    <th scope="col" class="text-sm font-medium text-white px-6 py-4">
+                                    <th scope="col" class="text-sm font-medium text-white px-6 py-4 hidden md:table-cell">
                                         Type
                                     </th>
-                                    <th scope="col" class="text-sm font-medium text-white px-6 py-4">
+                                    <th scope="col" class="text-sm font-medium text-white px-6 py-4 hidden md:table-cell">
                                         Status
                                     </th>
-                                    <th scope="col" class="text-sm font-medium text-white px-6 py-4">
+                                    <th scope="col" class="text-sm font-medium text-white px-6 py-4 hidden md:table-cell">
                                         Categories
                                     </th>
                                     <th scope="col" class="text-sm font-medium text-white px-6 py-4">
@@ -61,22 +61,22 @@
                             <GlobalTransition>
                                 <tbody v-if="products.length">
                                     <tr v-for="(product) of products" :key="product.id" class="bg-white border-b">
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                            <img v-if="product.image" class="rounded-md w-[50px]" :src="product.image">
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 hidden sm:table-cell">
+                                            <img v-if="product.feature_image" class="rounded-md w-[50px]" :src="product.feature_image">
                                         </td>
                                         <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
                                             {{ product.title }}
                                         </td>
-                                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap hidden sm:table-cell">
                                             {{ product.price }}$
                                         </td>
-                                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap hidden md:table-cell">
                                             {{ product.type }}
                                         </td>
-                                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap hidden md:table-cell">
                                             {{ product.status }}
                                         </td>
-                                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"
+                                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap hidden md:table-cell"
                                             v-html="product.categories_text">
 
                                         </td>

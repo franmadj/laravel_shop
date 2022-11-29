@@ -573,9 +573,9 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       type: Number,
       "default": 1
     },
-    test: {
-      type: Number,
-      "default": 10
+    name: {
+      type: String,
+      "default": 'images'
     }
   },
   emits: ['any-files-update', 'files-updated'],
@@ -585,10 +585,8 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     expose();
     var props = __props;
     var active = (0,vue__WEBPACK_IMPORTED_MODULE_0__.ref)(false);
-    var inActiveTimeout = null; // watch(props, (currentValue, oldValue) => {
-    // 	console.log('test: ', currentValue)
-    // });
-
+    var inActiveTimeout = null;
+    var limitReached = (0,vue__WEBPACK_IMPORTED_MODULE_0__.ref)(false);
     (0,vue__WEBPACK_IMPORTED_MODULE_0__.watch)(props.filesDefault, function (urls) {
       console.log('watch(props.filesDefault');
       console.log('urls: ', urls); //files = [];
@@ -617,23 +615,23 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       }, 50);
     }
 
-    function onDrop(e) {
-      console.log('onDrop');
+    var onDrop = function onDrop(e) {
+      console.log('onDrop maxFile' + props.maxFiles);
       console.log('e.dataTransfer.files: ', e.dataTransfer.files);
       setInactive();
       addFiles(e.dataTransfer.files);
       emit('files-updated', files);
       emit('any-files-update', true); //emit('files-dropped', [...e.dataTransfer.files])
-    }
+    };
 
-    function onInputChange(e) {
-      console.log('onInputChange');
+    var onInputChange = function onInputChange(e) {
+      console.log('onInputChange maxFile' + props.maxFiles);
       console.log('e.target.files', e.target.files);
       addFiles(e.target.files);
       emit('files-updated', files);
       emit('any-files-update', true);
       e.target.value = null; // reset so that selecting the same file again will still cause it to fire this change
-    }
+    };
 
     function preventDefaults(e) {
       e.preventDefault();
@@ -651,13 +649,11 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       });
     });
     var files = (0,vue__WEBPACK_IMPORTED_MODULE_0__.reactive)([]);
-    var sss = files;
-    console.log('sss', sss);
     var filesEdit = (0,vue__WEBPACK_IMPORTED_MODULE_0__.ref)([]);
 
     function addFiles(newFiles) {
       console.log('addFiles');
-      console.log('files.value.length: ', files.length);
+      console.log('files.value.length: ', files);
       if (files.length > props.maxFiles - 1) return;
       console.log('files.value.length > (props.maxFiles - 1)');
       console.log('newFiles: ', newFiles);
@@ -702,6 +698,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       props: props,
       active: active,
       inActiveTimeout: inActiveTimeout,
+      limitReached: limitReached,
       setActive: setActive,
       setInactive: setInactive,
       onDrop: onDrop,
@@ -709,7 +706,6 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       preventDefaults: preventDefaults,
       events: events,
       files: files,
-      sss: sss,
       filesEdit: filesEdit,
       addFiles: addFiles,
       fileExists: fileExists,
@@ -1012,7 +1008,7 @@ var _hoisted_4 = {
 };
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)((0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveDynamicComponent)($props.tag), {
-    "class": "file-preview"
+    "class": "file-preview grow"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
       return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
@@ -1056,10 +1052,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
 
 var _hoisted_1 = ["onDragenter", "onDragover", "onDragleave", "onDrop"];
-var _hoisted_2 = {
-  "for": "file-input",
-  "class": "flex justify-center"
-};
+var _hoisted_2 = ["for"];
 var _hoisted_3 = {
   key: 0
 };
@@ -1090,8 +1083,9 @@ var _hoisted_9 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementV
 );
 
 var _hoisted_10 = [_hoisted_8, _hoisted_9];
-var _hoisted_11 = {
-  "class": "image-list"
+var _hoisted_11 = ["id"];
+var _hoisted_12 = {
+  "class": "image-list flex justify-center gap-1"
 };
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", {
@@ -1100,15 +1094,22 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     onDragover: (0,vue__WEBPACK_IMPORTED_MODULE_0__.withModifiers)($setup.setActive, ["prevent"]),
     onDragleave: (0,vue__WEBPACK_IMPORTED_MODULE_0__.withModifiers)($setup.setInactive, ["prevent"]),
     onDrop: (0,vue__WEBPACK_IMPORTED_MODULE_0__.withModifiers)($setup.onDrop, ["prevent"])
-  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", _hoisted_2, [$setup.active ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_3, _hoisted_6)) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_7, _hoisted_10)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+    "for": 'file-input-' + $setup.props.name,
+    "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["flex justify-center", {
+      'hidden': $setup.files.length >= $setup.props.maxFiles
+    }])
+  }, [$setup.active ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_3, _hoisted_6)) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_7, _hoisted_10)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     "class": "hidden",
     type: "file",
-    id: "file-input",
+    id: 'file-input-' + $setup.props.name,
     multiple: "",
     onChange: $setup.onInputChange
-  }, null, 32
-  /* HYDRATE_EVENTS */
-  )]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("ul", _hoisted_11, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($setup.files, function (file) {
+  }, null, 40
+  /* PROPS, HYDRATE_EVENTS */
+  , _hoisted_11)], 10
+  /* CLASS, PROPS */
+  , _hoisted_2), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("ul", _hoisted_12, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($setup.files, function (file) {
     return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)($setup["FilePreview"], {
       key: file.id,
       file: file,

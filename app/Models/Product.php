@@ -38,9 +38,9 @@ class Product extends Model implements HasMedia
         return $this->hasMany(Variation::class);
     }
 
-    public function getAllImagesAttribute()
+    public function getGalleryAttribute()
     {
-        $images = $this->getMedia();
+        $images = $this->getMedia('gallery');
         //dd($images);
         $imageUrls = [];
         foreach ($images as $image) {
