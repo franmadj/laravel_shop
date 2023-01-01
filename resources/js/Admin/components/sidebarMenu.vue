@@ -7,8 +7,7 @@
                 d="M16 132h416c8.837 0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H16C7.163 60 0 67.163 0 76v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z" />
         </svg>
     </button>
-    <sidebar
-        class="bg-gray-800 w-full lg:w-60 border-r-0 border-stone-400 h-screen lg:h-auto overflow-y-scroll lg:overflow-y-visible 
+    <sidebar class="bg-gray-800 w-full lg:w-60 border-r-0 border-stone-400 h-screen lg:h-auto overflow-y-scroll lg:overflow-y-visible 
          shrink-0 fixed lg:relative lg:block lg:border-r top-0 left-0"
         :class="{ 'grid': !toggleMenu, 'hidden': toggleMenu }">
         <div class="flex lg:hidden justify-end pt-4 pr-6">
@@ -25,7 +24,7 @@
         <ul class="w-full block mx-auto bg-gray-800 h-full">
 
 
-            <li class="relative">
+            <li v-if="isAdmin" class="relative">
                 <router-link
                     class="peer p-2 bg-gray-800 font-normal text-white hover:bg-gray-700 hover:text-blue-400 border-white border-b flex"
                     to="/admin">
@@ -40,14 +39,14 @@
                 lg:hidden lg:absolute lg:left-full lg:w-fit">
                     <li>
                         <router-link class="whitespace-nowrap p-2 bg-gray-800 font-normal text-white block hover:bg-gray-700 hover:text-blue-400 border-white border-b rounded-sm px-5
-                            pl-10 lg:pl-2" to="/admin/product">View Site</router-link>
+                            pl-10 lg:pl-2" to="/">View Site</router-link>
                     </li>
 
                 </ul>
             </li>
 
 
-            <li class="relative">
+            <li v-if="isAdmin" class="relative">
                 <router-link
                     class="peer p-2 bg-gray-800 font-normal text-white hover:bg-gray-700 hover:text-blue-400 border-white border-b flex"
                     to="/admin/products">
@@ -80,7 +79,7 @@
             </li>
 
 
-            <li class="relative">
+            <li v-if="isAdmin" class="relative">
                 <a class="peer p-2 bg-gray-800 font-normal text-white hover:bg-gray-700 hover:text-blue-400 border-white border-b flex"
                     href="/">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-1" fill="none" viewBox="0 0 24 24"
@@ -105,7 +104,7 @@
             </li>
 
 
-            <li class="relative">
+            <li v-if="isAdmin" class="relative">
                 <a class="peer p-2 bg-gray-800 font-normal text-white hover:bg-gray-700 hover:text-blue-400 border-white border-b flex"
                     href="#">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-1" fill="none" viewBox="0 0 24 24"
@@ -160,7 +159,13 @@
 </template>
 <script setup>
 import { ref, onMounted } from 'vue'
+import { useStore } from 'vuex'
+
+const store = useStore()
 let toggleMenu = ref(true)
+
+const isAdmin = ref(store.getters['auth/user'].isAdmin)
+
 onMounted(() => {
 
     const links = [...document.getElementsByTagName('a')]
@@ -177,19 +182,20 @@ onMounted(() => {
 const logout = (e) => {
     console.log('ss')
     e.preventDefault()
-    axios.get('/sanctum/csrf-cookie').then(response => {
-        axios.post('/api/admin/logout')
-            .then(response => {
-                if (response.data.success) {
-                    window.location.href = "/admin/login"
-                } else {
-                    console.log(response)
-                }
-            })
-            .catch(function (error) {
-                console.error(error);
-            });
-    })
+    //axios.get('/sanctum/csrf-cookie').then(response => {
+    axios.post('/api/logout')
+        .then(response => {
+            if (response.data.success) {
+                store.dispatch('auth/login')
+                
+            } else {
+                console.log(response)
+            }
+        })
+        .catch(function (error) {
+            console.error(error);
+        });
+    //})
 }
             /*
 export default {

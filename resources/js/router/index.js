@@ -20,12 +20,19 @@ const AddUser = () =>
 const Account = () =>
     import ('../Admin/Pages/Account.vue')
 const Login = () =>
-    import ('../Auth/Login.vue')
+    import ('../Auth/Pages/Login.vue')
 const Register = () =>
-    import ('../Auth/Register.vue')
+    import ('../Auth/Pages/Register.vue')
+const ForgotPassword = () =>
+    import ('../Auth/Pages/ForgotPassword.vue')
+const ResetPassword = () =>
+    import ('../Auth/Pages/ResetPassword.vue')
+const Shop = () =>
+    import ('../Shop/Pages/Shop.vue')
 const ShopProduct = () =>
     import ('../Shop/Pages/ShopProduct.vue')
-    /*
+
+/*
 import Product from '../Admin/Pages/Product.vue'
 import Products from '../Admin/Pages/Products.vue'
 import Dashboard from '../Admin/Pages/Dashboard.vue'
@@ -42,14 +49,21 @@ import Register from '../Auth/Register.vue'
 import ShopProduct from '../Shop/Pages/ShopProduct.vue'
 */
 export const routes = [{
-        path: '/shop',
-        component: Dashboard,
+        path: '/',
+        component: Shop,
         name: 'Shop',
+        meta: {
+            isPublicPage: true
+        }
     },
     {
         path: '/shop/:slug',
         component: ShopProduct,
         name: 'ShopProduct',
+        props: true,
+        meta: {
+            isPublicPage: true
+        }
     },
     {
         path: '/admin',
@@ -124,12 +138,23 @@ export const routes = [{
         }
     },
     {
-        path: '/admin/login',
+        path: '/login',
         component: Login,
         name: "Login"
     },
     {
-        path: '/admin/register',
+        path: '/forgot-password',
+        component: ForgotPassword,
+        name: "ForgotPassword"
+    },
+    {
+        path: '/reset-password/:token',
+        component: ResetPassword,
+        name: "ResetPassword",
+        props: true,
+    },
+    {
+        path: '/register',
         component: Register,
         name: "Register"
     },
@@ -148,10 +173,10 @@ router.beforeEach((to, from, next) => {
             next();
             return;
         } else {
-            router.push('/admin/login');
+            router.push('/login');
         }
     } else {
-        if (window.Laravel.isLoggedin && '/admin/login' == to.path) {
+        if (window.Laravel.isLoggedin && '/login' == to.path) {
             window.location.href = "/admin";
             return;
         }

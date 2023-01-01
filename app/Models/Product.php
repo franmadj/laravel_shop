@@ -6,10 +6,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\Image\Manipulations;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use App\Traits\IsLikable;
 
 class Product extends Model implements HasMedia
 {
-    use HasFactory, InteractsWithMedia;
+    use HasFactory, InteractsWithMedia, IsLikable;
 
     /**
      * The attributes that are mass assignable.
@@ -27,6 +30,13 @@ class Product extends Model implements HasMedia
         'in_stock',
         'stock_quantity',
     ];
+
+    protected $with = ['productable.user'];
+
+    public function productable()
+    {
+        return $this->morphTo('productable');
+    }
 
     public function categories()
     {
@@ -48,5 +58,18 @@ class Product extends Model implements HasMedia
 
         }
         return $imageUrls;
+    }
+
+    public function registerMediaConversions(Media $media = null): void
+    {
+        $this->addMediaConversion('thumb')
+            ->fit(Manipulations::FIT_MAX, 50, 50)
+            ->performOnCollections('default');
+        
+        $this->addMediaConversion('medium')
+            ->fit(Manipulations::FIT_MAX, 400, 400)
+            ->performOnCollections('default');
+
+
     }
 }

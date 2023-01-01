@@ -25,8 +25,11 @@
         "stylus": "^0.59.0",
         "stylus-loader": "^3.0.2",
         "tw-elements": "^1.0.0-alpha12",
+        "v-click-outside": "^3.2.0",
         "vue-final-modal": "^3.4.11",
         "vue-router": "^4.1.2",
-        "vuejs-confirm-dialog": "^0.4.3"
+        "vuejs-confirm-dialog": "^0.4.3",
+        "vuex": "^4.1.0",
+        "vuex-persistedstate": "^4.1.0"
     }
 }

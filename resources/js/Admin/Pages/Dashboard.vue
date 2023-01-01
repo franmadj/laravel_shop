@@ -1,13 +1,19 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
+import { useStore } from 'vuex'
 
-const count = ref(0)
+const store = useStore()
+
+
+const user= computed(() => store.getters['auth/user'])
+
+console.log(store.getters['auth/user']);
 </script>
 
 
 <template>
     <div class="grow min-h-screen p-6 overflow-hidden">
-        <h1 class="text-3xl font-bold mb-3 uppercase text-gray-600">Dashboard</h1>
+        <h1 class="text-3xl font-bold mb-3 uppercase text-gray-600">Dashboard {{user.name}}</h1>
 
 
 

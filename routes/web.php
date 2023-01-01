@@ -16,6 +16,12 @@ use Illuminate\Support\Facades\Route;
 //     return view('admin/auth');
 // })->whereIn('any', ['login', 'register']);
 
+
+Route::get('/reset-password/{token}', function ($token) {
+    return view('admin/index');
+})->middleware('guest')->name('password.reset');
+
+
 Route::get('{any}', function () {
     return view('admin/index');
 })->where('any', '.*');
