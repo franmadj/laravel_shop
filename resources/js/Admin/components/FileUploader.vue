@@ -27,6 +27,8 @@ import {
 } from 'vue'
 import FilePreview from './FilePreview.vue'
 import helpers from '../../compositions/helpers'
+
+
 const emit = defineEmits(['any-files-update', 'files-updated'])
 const props = defineProps({
 	filesDefault: { type: Array, default: [] },

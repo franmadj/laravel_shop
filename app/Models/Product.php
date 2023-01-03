@@ -54,7 +54,9 @@ class Product extends Model implements HasMedia
         //dd($images);
         $imageUrls = [];
         foreach ($images as $image) {
-            $imageUrls[] = $image->getFullUrl();
+            $imageUrls['original'][] = $image->getFullUrl();
+            $imageUrls['medium'][] = $image->getFullUrl('medium');
+            $imageUrls['thumb'][] = $image->getFullUrl('thumb');
 
         }
         return $imageUrls;
@@ -63,12 +65,12 @@ class Product extends Model implements HasMedia
     public function registerMediaConversions(Media $media = null): void
     {
         $this->addMediaConversion('thumb')
-            ->fit(Manipulations::FIT_MAX, 50, 50)
-            ->performOnCollections('default');
+            ->fit(Manipulations::FIT_MAX, 100, 100)
+            ->performOnCollections('default','gallery');
         
         $this->addMediaConversion('medium')
             ->fit(Manipulations::FIT_MAX, 400, 400)
-            ->performOnCollections('default');
+            ->performOnCollections('default','gallery');
 
 
     }

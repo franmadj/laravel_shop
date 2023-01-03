@@ -324,12 +324,12 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
                       selectedCategories: selectedCategories
                     });
 
-                    if (res.data.data.feature_image) {
-                      filesDefault.push(res.data.data.feature_image);
+                    if (res.data.data.feature_thumb) {
+                      filesDefault.push(res.data.data.feature_thumb);
                     }
 
-                    if (res.data.data.gallery) {
-                      res.data.data.gallery.forEach(function (url) {
+                    if (res.data.data.gallery.thumb) {
+                      res.data.data.gallery.thumb.forEach(function (url) {
                         galleryDefault.push(url);
                       });
                     }

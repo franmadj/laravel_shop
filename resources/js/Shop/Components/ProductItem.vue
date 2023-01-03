@@ -1,12 +1,17 @@
 <template>
 
-    <div>
-        <router-link :to="'/shop/'+props.product.slug">
-            <img v-if="props.product.feature_medium"
-                class="hover:grow hover:shadow-lg mx-auto md:h-44 lg:h-80 xl:h-[400px] object-cover"
-                :src="props.product.feature_medium">
-            <img v-else class="hover:grow hover:shadow-lg mx-auto md:h-44 lg:h-80 xl:h-[400px] object-cover"
-                src="https://images.unsplash.com/photo-1555982105-d25af4182e4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&h=400&q=80">
+    <div :class="{ 'flex flex-col md:flex-row': props.gallery }">
+        <div v-if="props.gallery && props.product.gallery.thumb.length" class="flex flex-row md:flex-col mr-2 mb-1 md:mb-0">
+
+            <img v-for="(image, index) in props.product.gallery.thumb" :key="index" :src="image"
+                class="min-w-[100px] w-[100px] h-24 cursor-pointer object-cover md:mb-1 mr-1 md:mr-0"
+                @click="setMainImage(props.product.gallery.medium[index])" />
+
+
+        </div>
+        <router-link :to="'/shop/' + props.product.slug" class="w-full">
+            <img class="hover:grow hover:shadow-lg mx-auto md:h-44 lg:h-80 xl:h-[400px] object-cover w-full" :src="mainImage">
+
             <div class="pt-3 flex items-center justify-between">
                 <p class="">{{ props.product.title }}</p>
                 <div @click.prevent="likeToggle(props.product.id)">
@@ -23,6 +28,7 @@
                 </div>
             </div>
             <p class="pt-1 text-gray-900">£{{ props.product.price }}</p>
+            <div v-if="props.content" v-html="props.product.content"></div>
         </router-link>
     </div>
 </template>
@@ -32,23 +38,40 @@ import { ref, onMounted } from 'vue'
 
 const props = defineProps({
     product: { type: Object, required: true, default: false },
-    authenticated: { type: Boolean, required: true, default: false }
+    authenticated: { type: Boolean, required: true, default: false },
+    gallery: { type: Boolean, required: false, default: false },
+    content: { type: Boolean, required: false, default: false }
 })
+
+let mainImage = ref('https://images.unsplash.com/photo-1555982105-d25af4182e4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&h=400&q=80');
 
 onMounted(() => {
 
     console.log('productItem', props.product)
 
+    if (props.product.feature_medium)
+        mainImage.value = props.product.feature_medium
+
+
+
 })
 
 const liked = ref(props.product.liked);
 
+const setMainImage = (image) => {
+
+    mainImage.value = image
+
+    console.log(image);
+
+}
+
 const likeToggle = async (id) => {
     console.log(props.authenticated);
-    if(!props.authenticated){
+    if (!props.authenticated) {
         alert('Please log in')
     }
-    
+
     axios.patch(`/api/product/${id}/like`)
         .then(res => {
             if (res.data.success) {

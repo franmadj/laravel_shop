@@ -8,14 +8,29 @@
         <Carousel />
 
 
-        <section class="bg-white py-8">
+        <section class="bg-white py-8 px-2">
 
             <div class="container mx-auto pt-4 pb-12">
-                <div class=" flex items-center gap-2 flex-wrap justify-around">
+                <div class="flex flex-col md:flex-row items-center md:items-start gap-4 flex-wrap justify-center">
 
                     <GlobalGroupTransition>
-                        <ProductItem class="" v-if="product" :product="product" :authenticated="authenticated" />
+                        <ProductItem class="w-full sm:w-[500px] md:w-[500px] lg:w-[700px]" v-if="product" :product="product"
+                            :authenticated="authenticated" gallery="true" content="true" />
                     </GlobalGroupTransition>
+
+                    <div class="flex flex-col gap-4 w-full lg:w-fit">
+                        <select class="p-2 border rounded-sm shadow-sm grow">
+                            <option value="1">Category</option>
+                        </select>
+                        <select class="p-2 border rounded-sm shadow-sm grow">
+                            <option value="1">Category</option>
+                        </select>
+                        <select class="p-2 border rounded-sm shadow-sm grow">
+                            <option value="1">Category</option>
+                        </select>
+                        <button type="button" class="inline-block px-6 py-2.5 bg-gray-200 text-gray-700 font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-gray-300 hover:shadow-lg focus:bg-gray-300 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-400 active:shadow-lg transition duration-150 ease-in-out">add To Cart</button>
+
+                    </div>
                 </div>
             </div>
 
@@ -45,6 +60,7 @@ import Carousel from '../Components/Carousel.vue'
 import ProductList from '../Components/ProductList.vue'
 import Footer from '../Components/Footer.vue'
 import ProductItem from '../Components/ProductItem.vue'
+import GlobalGroupTransition from '../../Transitions/GlobalGroupTransition.vue'
 
 
 const store = useStore()
@@ -61,7 +77,7 @@ const props = defineProps({
 
 
 onMounted(() => {
-    console.log(props,props.slug)
+    console.log(props, props.slug)
     if (props.slug)
         loadProduct(props.slug)
 })
@@ -70,23 +86,11 @@ const loadProduct = async (slug) => {
     await axios.get('/api/shop/product/' + slug)
         .then(res => {
             if (res.data.success) {
-                let selectedCategories = {};
-                res.data.data.categories.map(cat => {
-                    selectedCategories[cat.id] = true;
-                });
 
-                console.log('DATA EDIT: ', { ...res.data.data, selectedCategories });
-                product.value = { ...res.data.data, selectedCategories };
+                console.log('DATA EDIT: ', { ...res.data.data });
+                product.value = { ...res.data.data };
 
-                if (res.data.data.feature_image) {
-                    //filesDefault.push(res.data.data.feature_image)
-                }
 
-                if (res.data.data.gallery) {
-                    res.data.data.gallery.forEach((url) => {
-                        //galleryDefault.push(url)
-                    })
-                }
 
 
 

@@ -2,27 +2,27 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 use App\Models\Product;
 use App\Transformers\ProductTransformer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
-use App\Http\Controllers\Controller;
 
 class ProductController extends Controller
 {
 
     public function likeToggle(Product $product, Request $request)
     {
-        //try {
-           // $with = ['postable.user', 'likes'];
+        try {
+            // $with = ['postable.user', 'likes'];
             $product = $product->like(auth()->user()->id);
 
             return responder()->success($product, new ProductTransformer())->respond();
-        //}  catch (\Exception $e) {
+        } catch (\Exception$e) {
             return responder()->error($e->getMessage());
-       // }
+        }
     }
 
     /**
@@ -87,11 +87,10 @@ class ProductController extends Controller
                             ->addMedia($file)
                             ->usingName('image')
                             ->toMediaCollection();
-                    } 
+                    }
 
                 }
             }
-
 
             $gallery = request('gallery', []);
             if (!empty($gallery) && is_array($gallery)) {
@@ -102,16 +101,15 @@ class ProductController extends Controller
                             ->addMedia($image)
                             ->usingName('gallery_image')
                             ->toMediaCollection('gallery');
-                    } 
+                    }
 
                 }
             }
 
-            
             if ($request->has('categories') and is_array($request->categories)) {
                 $product->categories()->attach(collect($request->categories));
             }
-            return responder()->success(['id'=>$product->id])->respond(201);
+            return responder()->success(['id' => $product->id])->respond(201);
         }
         return responder()->error()->respond();
 
@@ -121,7 +119,26 @@ class ProductController extends Controller
     {
         //dd(request()->all());
         $variations = request('variations', '');
+
+        $prodVariations = json_decode($product->variations);
+
+        if (
+            $prodVariations &&
+            !empty($variations['attrs']) &&
+            is_array($variations['attrs']) &&
+            !empty($prodVariations->attrs) &&
+            is_array($prodVariations->attrs)) {
+
+            if (
+                count($variations['attrs']) != count($prodVariations->attrs) ||
+                count(array_intersect($variations['attrs'], $prodVariations->attrs)) != count($prodVariations->attrs)) {
+                $product->variations()->delete();
+
+            }
+        }
+
         if (!empty($variations['possibilities']) && is_array($variations['possibilities'])) {
+
             foreach ($variations['possibilities'] as &$variation) {
 
                 //$data=array_only($variation['data'],)
@@ -145,11 +162,8 @@ class ProductController extends Controller
 
                         $newVariation = $product->variations()->create(Arr::except($variation['data'], ['stock_status']));
                         $variation['id'] = $newVariation->id;
-                        foreach ($variation['items'] as $item) {
-                            $attrItems = collect($variation['items'])->pluck('id');
-                            $newVariation->AttributeItems()->attach($attrItems, ['product_id' => $product->id]);
-
-                        }
+                        $attrItems = collect($variation['items'])->pluck('id');
+                        $newVariation->AttributeItems()->attach($attrItems, ['product_id' => $product->id]);
 
                     }
 
@@ -219,13 +233,12 @@ class ProductController extends Controller
                             ->addMedia($file)
                             ->usingName('image')
                             ->toMediaCollection();
-                    } 
+                    }
 
                 }
-            }elseif (request('clearFiles')) {
+            } elseif (request('clearFiles')) {
                 $product->clearMediaCollection();
             }
-
 
             $gallery = request('gallery', []);
             if (!empty($gallery) && is_array($gallery)) {
@@ -236,13 +249,12 @@ class ProductController extends Controller
                             ->addMedia($image)
                             ->usingName('gallery_image')
                             ->toMediaCollection('gallery');
-                    } 
+                    }
 
                 }
-            }elseif (request('clearGallery')) {
+            } elseif (request('clearGallery')) {
                 $product->clearMediaCollection('gallery');
             }
-
 
             if ($request->has('categories') and is_array($request->categories)) {
                 $product->categories()->detach();

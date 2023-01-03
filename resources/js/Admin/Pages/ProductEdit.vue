@@ -192,12 +192,12 @@ const edit = async (id) => {
                 console.log('DATA EDIT: ', { ...res.data.data, selectedCategories });
                 product.value = { ...res.data.data, selectedCategories };
 
-                if (res.data.data.feature_image) {
-                    filesDefault.push(res.data.data.feature_image)
+                if (res.data.data.feature_thumb) {
+                    filesDefault.push(res.data.data.feature_thumb)
                 }
 
-                if (res.data.data.gallery) {
-                    res.data.data.gallery.forEach((url) => {
+                if (res.data.data.gallery.thumb) {
+                    res.data.data.gallery.thumb.forEach((url) => {
                         galleryDefault.push(url)
                     })
                 }
