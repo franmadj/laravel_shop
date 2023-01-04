@@ -829,23 +829,22 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       //console.log(e.target.value);
       axios.get('/api/admin/attribute').then(function (response) {
         if (response.data.success) {
-          attributes.value = response.data.data;
+          attributes.value = response.data.data; //if (helpers.testJSON(props.variations)) {
+          //const possibilities = (JSON.parse(props.variations))
 
-          if (_compositions_helpers__WEBPACK_IMPORTED_MODULE_5__["default"].testJSON(props.variations)) {
-            var possibilities = JSON.parse(props.variations);
-            attributes.value = attributes.value.map(function (attr) {
-              if (possibilities.attrs.includes(attr.id)) {
-                variations.attrs.push(attr.id);
-                attr.selected = true;
-              }
+          var possibilities = props.variations;
+          attributes.value = attributes.value.map(function (attr) {
+            if (possibilities.attrs.includes(attr.id)) {
+              variations.attrs.push(attr.id);
+              attr.selected = true;
+            }
 
-              return attr;
-            });
-            possibilities.possibilities.forEach(function (el) {
-              variations.possibilities.push(el);
-            });
-            console.log(attributes.value, variations);
-          }
+            return attr;
+          });
+          possibilities.possibilities.forEach(function (el) {
+            variations.possibilities.push(el);
+          });
+          console.log(attributes.value, variations); //}
         } else {}
       })["catch"](function (error) {
         toaster.error(error);
@@ -943,7 +942,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             selectedAttrs.forEach(function (attr, i) {
               possibilitiesItem.push({
                 id: attr.items[countTrack[i]].id,
-                name: attr.items[countTrack[i]].name
+                name: attr.items[countTrack[i]].name,
+                attributeId: attr.id
               });
 
               if (i == lastIndex) {
@@ -987,6 +987,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                     variations: variations
                   }).then(function (response) {
                     if (response.data.success) {
+                      variations.possibilities = response.data.data.possibilities;
                       toaster.success("Variation saved");
                     } else {
                       toaster.error("Error");

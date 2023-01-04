@@ -162,8 +162,11 @@ class ProductController extends Controller
 
                         $newVariation = $product->variations()->create(Arr::except($variation['data'], ['stock_status']));
                         $variation['id'] = $newVariation->id;
-                        $attrItems = collect($variation['items'])->pluck('id');
-                        $newVariation->AttributeItems()->attach($attrItems, ['product_id' => $product->id]);
+                        //$attrItems = collect($variation['items'])->pluck('id');
+                        collect($variation['items'])->each(function ($item) use ($newVariation, $product) {
+                            $newVariation->AttributeItems()->attach($item['id'], ['product_id' => $product->id, 'attribute_id' => $item['attributeId']]);
+
+                        });
 
                     }
 
@@ -186,7 +189,7 @@ class ProductController extends Controller
 
         }
 
-        return responder()->success()->respond(201);
+        return responder()->success($variations)->respond(201);
 
     }
 

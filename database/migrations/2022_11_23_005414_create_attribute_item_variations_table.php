@@ -20,6 +20,8 @@ class CreateAttributeItemVariationsTable extends Migration
             $table->foreign('attribute_item_id')->references('id')->on('attribute_items')->onDelete('cascade');
             $table->unsignedBigInteger('variation_id')->unsigned();
             $table->foreign('variation_id')->references('id')->on('variations')->onDelete('cascade');
+            $table->unsignedBigInteger('attribute_id')->unsigned();
+            $table->foreign('attribute_id')->references('id')->on('attributes')->onDelete('cascade');
         });
     }
 

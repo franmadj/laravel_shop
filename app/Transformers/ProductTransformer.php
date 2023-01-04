@@ -47,7 +47,7 @@ class ProductTransformer extends Transformer
             'gallery' => $product->gallery,
             'categories' => $categories->toArray(),
             'categories_text' => implode(' <br/> ', $categories->pluck('name')->toArray()),
-            'variations' => $product->variations,
+            'variations' => json_decode($product->variations),
             'liked' => auth()->user() ? $product->likes()->where('user_id', auth()->user()->id)->first() : false,
         ];
     }

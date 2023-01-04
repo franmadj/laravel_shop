@@ -16,6 +16,6 @@ class AttributeItem extends Model
     }
 
     function variations(){
-        return $this->belongsToMany(Variations::class,'attribute_item_variations','attribute_item_id','variation_id')->withPivot('product_id');
+        return $this->belongsToMany(Variations::class,'attribute_item_variations','attribute_item_id','variation_id')->withPivot('product_id', 'attribute_id');
     }
 }

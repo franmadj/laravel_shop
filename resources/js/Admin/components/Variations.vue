@@ -139,9 +139,10 @@ const populateAttributes = () => {
             if (response.data.success) {
                 attributes.value = response.data.data
 
-                if (helpers.testJSON(props.variations)) {
+                //if (helpers.testJSON(props.variations)) {
 
-                    const possibilities = (JSON.parse(props.variations))
+                    //const possibilities = (JSON.parse(props.variations))
+                    const possibilities = props.variations
                     attributes.value = attributes.value.map((attr) => {
                         if (possibilities.attrs.includes(attr.id)) {
                             variations.attrs.push(attr.id)
@@ -158,7 +159,7 @@ const populateAttributes = () => {
 
 
                     console.log(attributes.value, variations)
-                }
+                //}
 
             } else {
 
@@ -215,7 +216,7 @@ const createPosibleVariations = () => {
         let keep = true;
         while (keep) {
             selectedAttrs.forEach((attr, i) => {
-                possibilitiesItem.push({ id: attr.items[countTrack[i]].id, name: attr.items[countTrack[i]].name })
+                possibilitiesItem.push({ id: attr.items[countTrack[i]].id, name: attr.items[countTrack[i]].name, attributeId:attr.id })
                 if (i == lastIndex) {
                     for (let key = lastIndex; key >= 0; key--) {
                         let nextItem = countTrack[key] + 1
@@ -248,7 +249,7 @@ const store = async () => {
         axios.post('/api/admin/variations/' + props.productId, { variations: variations })
             .then(response => {
                 if (response.data.success) {
-
+                    variations.possibilities=response.data.data.possibilities
                     toaster.success(`Variation saved`);
                 } else {
                     toaster.error(`Error`);
