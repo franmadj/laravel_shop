@@ -216,7 +216,7 @@ const createPosibleVariations = () => {
         let keep = true;
         while (keep) {
             selectedAttrs.forEach((attr, i) => {
-                possibilitiesItem.push({ id: attr.items[countTrack[i]].id, name: attr.items[countTrack[i]].name, attributeId:attr.id })
+                possibilitiesItem.push({ id: attr.items[countTrack[i]].id, name: attr.items[countTrack[i]].name, attributeId:attr.id, attributeName:attr.name })
                 if (i == lastIndex) {
                     for (let key = lastIndex; key >= 0; key--) {
                         let nextItem = countTrack[key] + 1

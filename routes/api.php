@@ -11,6 +11,7 @@ use App\Http\Controllers\ProductController as ControllersProductController;
 use App\Http\Controllers\ShopController;
 use App\Transformers\UserTransformer;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AttributeItemVariationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -46,6 +47,7 @@ Route::prefix('shop')->group(function () {
     Route::get('products', [ShopController::class, 'products']);
     Route::get('categories', [ShopController::class, 'categories']);
     Route::get('product/{product}', [ControllersProductController::class, 'show']);
+    Route::get('attribute-items', [AttributeItemVariationController::class, 'index']);
 
 });
 Route::middleware('auth:sanctum')->group(function () {

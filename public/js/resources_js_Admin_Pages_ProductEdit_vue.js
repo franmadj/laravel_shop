@@ -943,7 +943,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               possibilitiesItem.push({
                 id: attr.items[countTrack[i]].id,
                 name: attr.items[countTrack[i]].name,
-                attributeId: attr.id
+                attributeId: attr.id,
+                attributeName: attr.name
               });
 
               if (i == lastIndex) {
