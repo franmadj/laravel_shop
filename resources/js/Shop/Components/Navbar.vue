@@ -16,8 +16,8 @@
                 <nav>
                     <ul class="md:flex items-center justify-between text-base text-gray-700 pt-4 md:pt-0">
                         <li>
-                            <router-link to="/" class="inline-block no-underline hover:text-black hover:underline py-2 px-4"
-                                >Shop</router-link>
+                            <router-link to="/"
+                                class="inline-block no-underline hover:text-black hover:underline py-2 px-4">Shop</router-link>
                         </li>
                         <li><a class="inline-block no-underline hover:text-black hover:underline py-2 px-4"
                                 href="#">About</a></li>
@@ -58,10 +58,12 @@
                     </ul>
                 </li>
 
-                <li class="pl-3 inline-block no-underline hover:text-black" href="#">
-                    <a href="/cart" class="relative">
+                <li class="pl-3 inline-block no-underline hover:text-black relative" href="#">
+                    <a href="#" @click.prevent="openCartPreview" class="relative">
                         <span
-                            class="absolute rounded-full text-center bg-red-500 text-white p-1 w-5 h-5 -top-2 -right-2 leading-3 fs-10">2</span>
+                            class="absolute rounded-full text-center bg-red-500 text-white p-1 w-5 h-5 -top-2 -right-2 leading-3 fs-10">{{
+                                cartQuantity
+                            }}</span>
                         <svg class="fill-current hover:text-black" xmlns="http://www.w3.org/2000/svg" width="24"
                             height="24" viewBox="0 0 24 24">
                             <path
@@ -70,6 +72,38 @@
                             <circle cx="17.5" cy="18.5" r="1.5" />
                         </svg>
                     </a>
+                    <div v-show="cartPreview" id="contentCartPreview"
+                        class="absolute border rounded-lg border-gray-400 z-20 min-w-[240px] -left-[80px] bg-white">
+                        <h3 class="flex justify-center gap-2 pt-5 pb-3 text-xl">Your Cart 
+                            <svg class="text-white w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!-- Font Awesome Pro 5.15.4 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) --><path d="M528.12 301.319l47.273-208C578.806 78.301 567.391 64 551.99 64H159.208l-9.166-44.81C147.758 8.021 137.93 0 126.529 0H24C10.745 0 0 10.745 0 24v16c0 13.255 10.745 24 24 24h69.883l70.248 343.435C147.325 417.1 136 435.222 136 456c0 30.928 25.072 56 56 56s56-25.072 56-56c0-15.674-6.447-29.835-16.824-40h209.647C430.447 426.165 424 440.326 424 456c0 30.928 25.072 56 56 56s56-25.072 56-56c0-22.172-12.888-41.332-31.579-50.405l5.517-24.276c3.413-15.018-8.002-29.319-23.403-29.319H218.117l-6.545-32h293.145c11.206 0 20.92-7.754 23.403-18.681z"/></svg></h3>
+                        <ul v-if="cartItems.length">
+                            <li class="p-2 border-b border-gray-400 w-full flex justify-between gap-1"
+                                v-for="(cartItem, index) of cartItems" :key="index">
+                                <span v-html="cartItemTitle(cartItem)"></span>
+                                <span>x{{ cartItem.quantity }}</span>
+                                <span>${{ cartItem.price }}</span>
+                            </li>
+                            <li class="p-2 text-right">Total: <span class="font-bold">{{ cartTotal }}</span></li>
+                            <li class="p-2">
+                                <router-link to="/cart"
+                                    class="bg-black text-white text-center inline-block px-6 py-2.5 font-medium text-xs leading-tight uppercase rounded shadow-md w-full">Go
+                                    To yout cart</router-link>
+                            </li>
+                            <li class="p-2">
+                                <button type="button"
+                                    class="bg-black text-white inline-block px-6 py-2.5 font-medium text-xs leading-tight uppercase rounded shadow-md w-full">Go
+                                    Checkout</button>
+                            </li>
+                            <li class="p-2">
+                                <button type="button" @click="emptyCart"
+                                    class="bg-black text-white inline-block px-6 py-2.5 font-medium text-xs leading-tight uppercase rounded shadow-md w-full">Empty
+                                    Cart</button>
+                            </li>
+
+                        </ul>
+                        <p v-else class="flex m-4 justify-center">Your cart is empty</p>
+
+                    </div>
                 </li>
 
             </ul>
@@ -78,9 +112,12 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted, computed } from 'vue'
+import { useStore } from 'vuex'
 import { createToaster } from "@meforma/vue-toaster"
 import { createConfirmDialog } from 'vuejs-confirm-dialog'
+
+const store = useStore()
 
 
 
@@ -90,6 +127,43 @@ onMounted(() => {
 
 
 })
+
+const cartItems = computed(() => store.getters['cart/cartItems'])
+const cartQuantity = computed(() => store.getters['cart/cartQuantity'])
+const cartTotal = computed(() => store.getters['cart/cartTotal'])
+
+const cartPreview = ref(false)
+
+const emptyCart = () => {
+    store.commit('cart/EMPTY_CART')
+}
+
+const openCartPreview = () => {
+    cartPreview.value = true
+    setTimeout(() => {
+        const contentCartPreview = document.getElementById('contentCartPreview')
+        
+        console.log('popup', contentCartPreview);
+
+        const handleClickOutside = (e) => {
+            if (!(contentCartPreview === e.target || contentCartPreview.contains(e.target))) {
+                cartPreview.value = false
+                document.body.removeEventListener('click', handleClickOutside)
+
+            }
+        }
+        document.body.addEventListener('click', handleClickOutside)
+
+    }, 500)
+
+}
+
+const cartItemTitle = (cartItem) => {
+    let title = cartItem.title
+    if (cartItem.isVariable)
+        title += '<span class="block text-xs font-bold">' + cartItem.variation.name + '</span>'
+    return title
+}
 
 
 

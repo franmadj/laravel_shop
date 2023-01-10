@@ -31,6 +31,10 @@ const Shop = () =>
     import ('../Shop/Pages/Shop.vue')
 const ShopProduct = () =>
     import ('../Shop/Pages/ShopProduct.vue')
+const Cart = () =>
+    import ('../Shop/Pages/Cart.vue')
+const Checkout = () =>
+    import ('../Shop/Pages/Checkout.vue')
 
 /*
 import Product from '../Admin/Pages/Product.vue'
@@ -61,6 +65,22 @@ export const routes = [{
         component: ShopProduct,
         name: 'ShopProduct',
         props: true,
+        meta: {
+            isPublicPage: true
+        }
+    },
+    {
+        path: '/cart',
+        component: Cart,
+        name: 'Cart',
+        meta: {
+            isPublicPage: true
+        }
+    },
+    {
+        path: '/checkout',
+        component: Checkout,
+        name: 'Checkout',
         meta: {
             isPublicPage: true
         }

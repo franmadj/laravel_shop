@@ -20779,6 +20779,14 @@ var Shop = function Shop() {
 var ShopProduct = function ShopProduct() {
   return __webpack_require__.e(/*! import() */ "resources_js_Shop_Pages_ShopProduct_vue").then(__webpack_require__.bind(__webpack_require__, /*! ../Shop/Pages/ShopProduct.vue */ "./resources/js/Shop/Pages/ShopProduct.vue"));
 };
+
+var Cart = function Cart() {
+  return __webpack_require__.e(/*! import() */ "resources_js_Shop_Pages_Cart_vue").then(__webpack_require__.bind(__webpack_require__, /*! ../Shop/Pages/Cart.vue */ "./resources/js/Shop/Pages/Cart.vue"));
+};
+
+var Checkout = function Checkout() {
+  return __webpack_require__.e(/*! import() */ "resources_js_Shop_Pages_Checkout_vue").then(__webpack_require__.bind(__webpack_require__, /*! ../Shop/Pages/Checkout.vue */ "./resources/js/Shop/Pages/Checkout.vue"));
+};
 /*
 import Product from '../Admin/Pages/Product.vue'
 import Products from '../Admin/Pages/Products.vue'
@@ -20809,6 +20817,20 @@ var routes = [{
   component: ShopProduct,
   name: 'ShopProduct',
   props: true,
+  meta: {
+    isPublicPage: true
+  }
+}, {
+  path: '/cart',
+  component: Cart,
+  name: 'Cart',
+  meta: {
+    isPublicPage: true
+  }
+}, {
+  path: '/checkout',
+  component: Checkout,
+  name: 'Checkout',
   meta: {
     isPublicPage: true
   }
@@ -20984,6 +21006,97 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/store/cart.js":
+/*!************************************!*\
+  !*** ./resources/js/store/cart.js ***!
+  \************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _router__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../router */ "./resources/js/router/index.js");
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  namespaced: true,
+  state: {
+    cartItems: []
+  },
+  getters: {
+    cartItems: function cartItems(state) {
+      return state.cartItems;
+    },
+    cartTotal: function cartTotal(state) {
+      return state.cartItems.reduce(function (acc, cartItem) {
+        return cartItem.quantity * cartItem.price + acc;
+      }, 0).toFixed(2);
+    },
+    cartQuantity: function cartQuantity(state) {
+      return state.cartItems.reduce(function (acc, cartItem) {
+        return parseInt(cartItem.quantity) + parseInt(acc);
+      }, 0);
+    }
+  },
+  mutations: {
+    REMOVE_CART_ITEM: function REMOVE_CART_ITEM(state, index) {
+      console.log('REMOVE_CART_ITEM', index);
+      state.cartItems.splice(index, 1);
+    },
+    EMPTY_CART: function EMPTY_CART(state) {
+      state.cartItems = [];
+    },
+    ADD_CART_ITEMS: function ADD_CART_ITEMS(state, payload) {
+      var exists = false; //state.cartItems = [];
+
+      console.log('UPDATE_CART_ITEMS', payload, state.cartItems);
+      state.cartItems.forEach(function (item, key) {
+        if (item.id == payload.id) {
+          if (payload.isVariable) {
+            if (item.variation.id == payload.variation.id) {
+              exists = true;
+              state.cartItems[key].quantity = parseInt(state.cartItems[key].quantity) + parseInt(payload.quantity);
+            }
+          } else {
+            exists = true;
+            state.cartItems[key].quantity = parseInt(state.cartItems[key].quantity) + parseInt(payload.quantity);
+          }
+        }
+      });
+      if (!exists) state.cartItems.push(payload);
+      console.log('UPDAstate.cartItemsTE_CART_ITEMS', state.cartItems);
+    }
+  },
+  actions: {
+    getCartItems: function getCartItems(_ref) {
+      var commit = _ref.commit;
+      axios.get('/api/cart').then(function (response) {
+        commit('UPDATE_CART_ITEMS', response.data);
+      });
+    },
+    addCartItem: function addCartItem(_ref2, cartItem) {
+      var commit = _ref2.commit;
+      // axios.post('/api/cart', cartItem).then((response) => {
+      commit('UPDATE_CART_ITEMS', cartItem); // });
+    },
+    removeCartItem: function removeCartItem(_ref3, cartItem) {
+      var commit = _ref3.commit;
+      axios["delete"]('/api/cart/delete', cartItem).then(function (response) {
+        commit('UPDATE_CART_ITEMS', response.data);
+      });
+    },
+    removeAllCartItems: function removeAllCartItems(_ref4) {
+      var commit = _ref4.commit;
+      axios["delete"]('/api/cart/delete/all').then(function (response) {
+        commit('UPDATE_CART_ITEMS', response.data);
+      });
+    }
+  }
+});
+
+/***/ }),
+
 /***/ "./resources/js/store/index.js":
 /*!*************************************!*\
   !*** ./resources/js/store/index.js ***!
@@ -20995,16 +21108,19 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm-bundler.js");
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm-bundler.js");
 /* harmony import */ var vuex_persistedstate__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuex-persistedstate */ "./node_modules/vuex-persistedstate/dist/vuex-persistedstate.es.js");
 /* harmony import */ var _auth__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./auth */ "./resources/js/store/auth.js");
+/* harmony import */ var _cart__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./cart */ "./resources/js/store/cart.js");
 
 
 
-var store = (0,vuex__WEBPACK_IMPORTED_MODULE_2__.createStore)({
+
+var store = (0,vuex__WEBPACK_IMPORTED_MODULE_3__.createStore)({
   plugins: [(0,vuex_persistedstate__WEBPACK_IMPORTED_MODULE_0__["default"])()],
   modules: {
-    auth: _auth__WEBPACK_IMPORTED_MODULE_1__["default"]
+    auth: _auth__WEBPACK_IMPORTED_MODULE_1__["default"],
+    cart: _cart__WEBPACK_IMPORTED_MODULE_2__["default"]
   }
 });
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (store);
@@ -46764,7 +46880,7 @@ module.exports = JSON.parse('{"name":"axios","version":"0.21.4","description":"P
 /******/ 		// This function allow to reference async chunks
 /******/ 		__webpack_require__.u = (chunkId) => {
 /******/ 			// return url for filenames not based on template
-/******/ 			if ({"resources_js_Admin_Pages_Product_vue":1,"resources_js_Admin_Pages_ProductEdit_vue":1,"resources_js_Admin_Pages_Products_vue":1,"resources_js_Admin_Pages_Dashboard_vue":1,"resources_js_Admin_Pages_Categories_vue":1,"resources_js_Admin_Pages_Attributes_vue":1,"resources_js_Admin_Pages_Orders_vue":1,"resources_js_Admin_Pages_Users_vue":1,"resources_js_Admin_Pages_AddUser_vue":1,"resources_js_Admin_Pages_Account_vue":1,"resources_js_Auth_Pages_Login_vue":1,"resources_js_Auth_Pages_Register_vue":1,"resources_js_Auth_Pages_ForgotPassword_vue":1,"resources_js_Auth_Pages_ResetPassword_vue":1,"resources_js_Shop_Pages_Shop_vue":1,"resources_js_Shop_Pages_ShopProduct_vue":1}[chunkId]) return "js/" + chunkId + ".js";
+/******/ 			if ({"resources_js_Admin_Pages_Product_vue":1,"resources_js_Admin_Pages_ProductEdit_vue":1,"resources_js_Admin_Pages_Products_vue":1,"resources_js_Admin_Pages_Dashboard_vue":1,"resources_js_Admin_Pages_Categories_vue":1,"resources_js_Admin_Pages_Attributes_vue":1,"resources_js_Admin_Pages_Orders_vue":1,"resources_js_Admin_Pages_Users_vue":1,"resources_js_Admin_Pages_AddUser_vue":1,"resources_js_Admin_Pages_Account_vue":1,"resources_js_Auth_Pages_Login_vue":1,"resources_js_Auth_Pages_Register_vue":1,"resources_js_Auth_Pages_ForgotPassword_vue":1,"resources_js_Auth_Pages_ResetPassword_vue":1,"resources_js_Shop_Pages_Shop_vue":1,"resources_js_Shop_Pages_ShopProduct_vue":1,"resources_js_Shop_Pages_Cart_vue":1,"resources_js_Shop_Pages_Checkout_vue":1}[chunkId]) return "js/" + chunkId + ".js";
 /******/ 			// return url for filenames based on template
 /******/ 			return undefined;
 /******/ 		};

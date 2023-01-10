@@ -1,7 +1,4 @@
 <template>
-
-
-
   <select v-for="(attrSelect, i) of attrsSelect" :key="i" class="p-2 border rounded-sm shadow-sm grow"
     @change="changeAttribute(attrSelect, i, $event)">
     <option value="">Select {{ attrSelect.attrName }}</option>
@@ -14,7 +11,7 @@
 import { watch, onMounted, ref, reactive } from 'vue'
 import SelectAttributes from './SelectAttributes.vue'
 
-const emit = defineEmits(['update:modelValue']) // must emits
+const emit = defineEmits(['update:variations']) // must emits
 let attrs = reactive([]);
 let attrsSelect = reactive([]);
 let possibilities = ref([]);
@@ -26,18 +23,37 @@ const props = defineProps({
   },
 })
 
+onMounted(() => {
+  console.log(props.product.type);
+  if (props.product.type = 'variable') {
+    attrs = props.product.variations.attrs
+    possibilities.value = props.product.variations.possibilities.filter(item => item.added);
+    console.log('added possibilities', possibilities.value);
+    setAttributeNames()
+    console.log('attributeIdNames', attributeIdNames);
+
+    //console.log('possibilities', props.product.variations.possibilities, possibilities.value);
+
+    if (attrs.length)
+      attrs.forEach((attr, i) => {
+        if (i == 0) {
+          const options = getAttributes(attr, null);
+          console.log('options', options);
+          attrsSelect.push({ attrId: attr, attrName: attributeIdNames[attr], options })
+        } else {
+          attrsSelect.push({ attrId: attr, attrName: attributeIdNames[attr], options: [] })
+        }
+      });
+
+    console.log('attrsSelect', attrsSelect);
+  }
+})
+
 const changeAttribute = (attrSelect, i, e) => {
   console.log(attrSelect, i, e.target.value);
-
-
   const variations = e.target.value.split('|')
-
   console.log('changeAttribute', attrSelect.attrId, variations);
-
   const nextAttr = attrsSelect[i + 1]
-
-
-
   if (nextAttr) {
     const options = getAttributes(nextAttr.attrId, variations);
     nextAttr.options = options
@@ -45,47 +61,16 @@ const changeAttribute = (attrSelect, i, e) => {
       if (attrsSelect[selectIndex])
         attrsSelect[selectIndex].options = []
     }
+    emit('update:variations', false)
   } else {
     console.log(variations);
+    if (typeof variations[0] != 'undefined')
+      emit('update:variations', variations[0])
   }
 
 }
 
-onMounted(() => {
 
-  console.log(props.product.type);
-  if (props.product.type = 'variable') {
-    attrs = props.product.variations.attrs
-
-    possibilities.value = props.product.variations.possibilities.filter(item => item.added);
-
-    console.log('added possibilities', possibilities.value);
-
-    setAttributeNames()
-
-    console.log('attributeIdNames', attributeIdNames);
-
-    //console.log('possibilities', props.product.variations.possibilities, possibilities.value);
-
-    if (attrs.length)
-
-      attrs.forEach((attr, i) => {
-        if (i == 0) {
-          const options = getAttributes(attr, null);
-
-          console.log('options', options);
-          attrsSelect.push({ attrId: attr, attrName: attributeIdNames[attr], options })
-        } else {
-          attrsSelect.push({ attrId: attr, attrName: attributeIdNames[attr], options: [] })
-        }
-
-
-
-      });
-
-    console.log('attrsSelect', attrsSelect);
-  }
-})
 
 let attributeIdNames = {}
 const setAttributeNames = () => {
@@ -107,14 +92,9 @@ const getAttributes_ = (attr, variations, product) => {
 }
 
 const getAttributes = (attr, variations) => {
-
   console.log('getAttributes', attr, variations);
   let options = {};
-
   possibilities.value.forEach((item, i) => {
-
-
-
     if (!variations || variations.includes(String(item.id))) {
       item.items.forEach(el => {
         if (attr == el.attributeId) {
@@ -127,13 +107,9 @@ const getAttributes = (attr, variations) => {
   })
 
   console.log('options', options);
-
   let result = [];
-
   for (const [key, value] of Object.entries(options)) {
-
     result.push({ text: key, value: value.join('|') })
-
   }
 
   console.log('result', result);
