@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers;
 
-use App\Models\Order;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreOrderRequest;
 use App\Http\Requests\UpdateOrderRequest;
-use App\Http\Controllers\Controller;
-use App\Transformers\OrderTransformer;
+use App\Models\Order;
 
 class OrderController extends Controller
 {
@@ -17,12 +16,7 @@ class OrderController extends Controller
      */
     public function index()
     {
-        //try{
-            $orders=Order::all();
-            return responder()->success($orders, OrderTransformer::class)->respond(200);
-        //}catch(\Exception $e){
-            return responder()->error($e->getMessage().' '.$e->getFile().' '.$e->getLine())->respond();
-        //}
+        //
     }
 
     /**
@@ -43,7 +37,41 @@ class OrderController extends Controller
      */
     public function store(StoreOrderRequest $request)
     {
-        //
+
+        $validated = $request->validated();
+        $buyer_details = [
+            'first_name',
+            'last_name',
+            'email',
+            'address',
+            'suite',
+            'town',
+            'state',
+            'pc',
+            'phone',
+            'notes',
+        ];
+        $validated['buyer_details'] = array_filter($validated, function ($item) use ($buyer_details) {
+            return in_array($item, $buyer_details);
+        },ARRAY_FILTER_USE_KEY);
+        $validated = array_filter($validated, function ($item) use ($buyer_details) {
+            return !in_array($item, $buyer_details);
+        },ARRAY_FILTER_USE_KEY);
+
+        //dd($validated);
+        $order = Order::create($validated);
+
+        foreach ($validated['cart_items'] as $item) {
+            $order->orderItems()->create([
+                'type' => $item['isVariable'] ? 'variation' : 'simple',
+                'product_id' => $item['id'],
+                'title' => $item['isVariable'] ? $item['title'] . ' ' . $item['variation']['name'] : $item['title'],
+                'variation_id' => $item['isVariable'] ? $item['variation']['id'] : null,
+                'price' => $item['isVariable'] ? $item['variation']['price'] : $item['price'],
+            ]);
+
+        }
+        return responder()->success($order)->respond(200);
     }
 
     /**
@@ -65,11 +93,7 @@ class OrderController extends Controller
      */
     public function edit(Order $order)
     {
-        try {
-            return responder()->success($order, OrderTransformer::class)->respond(200);
-        } catch (\Exception $e) {
-            return responder()->error($e->getMessage())->respond();
-        }
+        //
     }
 
     /**
@@ -81,15 +105,7 @@ class OrderController extends Controller
      */
     public function update(UpdateOrderRequest $request, Order $order)
     {
-        try {
-            $validated = $request->validated();
-            if ($order->update($validated)) {
-                return responder()->success()->respond(200);
-            }
-            return responder()->error()->respond();
-        } catch (\Exception $e) {
-            return responder()->error($e->getMessage())->respond();
-        }
+        //
     }
 
     /**

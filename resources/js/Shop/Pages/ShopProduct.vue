@@ -2,13 +2,20 @@
     <div class="bg-white text-gray-600 work-sans leading-normal text-base tracking-normal">
         <!--Nav-->
         <Navbar />
-        <Carousel />
         <section class="bg-white py-8 px-2">
             <div class="container mx-auto pt-4 pb-12">
+                <router-link to="/" class="flex gap-2 items-center mb-9">
+                    <svg class="w-4" xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 448 512"><!-- Font Awesome Pro 5.15.4 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) -->
+                        <path
+                            d="M64 468V44c0-6.6 5.4-12 12-12h48c6.6 0 12 5.4 12 12v176.4l195.5-181C352.1 22.3 384 36.6 384 64v384c0 27.4-31.9 41.7-52.5 24.6L136 292.7V468c0 6.6-5.4 12-12 12H76c-6.6 0-12-5.4-12-12z" />
+                    </svg>
+                    <p class="text-xl">Back to shop</p>
+                </router-link>
                 <div class="flex flex-col md:flex-row items-center md:items-start gap-4 flex-wrap justify-center">
                     <GlobalGroupTransition>
-                        <ProductItem class="w-full sm:w-[500px] md:w-[500px] lg:w-[700px]" v-if="product"
-                            :product="product" :authenticated="authenticated" gallery="true" content="true" />
+                        <ProductItem class="w-full sm:w-[500px] md:w-[500px] lg:w-[700px]" v-if="product" :product="product"
+                            :authenticated="authenticated" gallery="true" content="true" />
                     </GlobalGroupTransition>
 
                     <div class="flex flex-col gap-4 w-full lg:w-fit">
@@ -76,7 +83,6 @@ const updateVariations = (variation) => {
         productItem.value.variation = false
         addToCartActive.value = false
     }
-
 }
 
 const addToCart = () => {
@@ -95,9 +101,7 @@ const addToCart = () => {
         price: item.price,
     }
 
-
     store.commit('cart/ADD_CART_ITEMS', payload)
-
     //store.dispatch('cart/addCartItem', productItem)
 }
 
@@ -109,7 +113,6 @@ const loadProduct = async (slug) => {
                 product.value = { ...res.data.data };
                 if (!product.value.is_variable)
                     addToCartActive.value = true
-
                 setProductItem()
             } else {
                 toaster.error(`Error`);

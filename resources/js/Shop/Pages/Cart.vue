@@ -16,7 +16,7 @@
 
                     </router-link>
                     <div class="w-full bg-black px-5 py-8 text-white text-center rounded-sm">
-                        <h1 class="uppercase mb-5 text-3xl">Your Cart <span class="text-gray-500">(1)</span></h1>
+                        <h1 class="uppercase mb-5 text-3xl">Your Cart <span class="text-gray-500">({{ cartQuantity }})</span></h1>
                         <table class="w-full">
                             <tr class="border-t border-white border-b">
                                 <th class="text-center uppercase p-3">Item</th>
@@ -28,13 +28,13 @@
                             <tr class="" v-for="(cartItem, index) of cartItems" :key="index">
                                 <th class="text-center font-normal p-3 flex items-center gap-5">
                                     <img :src="cartItem.image"
-                                        class="w-16 rounded-md">
-                                    <span v-html="cartItemTitle(cartItem)"></span> 
+                                        class="w-16 rounded">
+                                    <span class="text-left" v-html="cartItemTitle(cartItem)"></span> 
                                 </th>
                                 <th class="text-center font-normal p-3">${{ cartItem.price }}</th>
                                 <th class="text-center font-normal p-3">
-                                    <input class="rounded-sm w-14 text-black px-2 py-1 " type="number"
-                                        v-model="cartItem.quantity" />
+                                    <input class="rounded-sm w-14 text-black px-2 py-1 " type="number" @change="updateQuantity(index, $event)"
+                                        :value="cartItem.quantity" />
                                 </th>
                                 <th class="font-normal p-3">
                                     <svg class="cursor-pointer w-4 text-white block mx-auto" @click="removeItem(index)"
@@ -55,7 +55,7 @@
 
                     <div class="flex justify-between text-2xl mt-10 border-gray-200 border-t pt-5">
                         <p class="uppercase">Order Total</p>
-                        <p class="" v-text="cartTotal"></p>
+                        <p class="">$<span v-text="cartTotal"></span></p>
 
                     </div>
                     <div class="text-right mt-5">
@@ -89,12 +89,18 @@ const store = useStore()
 
 const cartItems = computed(() => store.getters['cart/cartItems'])
 const cartTotal = computed(() => store.getters['cart/cartTotal'])
+const cartQuantity = computed(() => store.getters['cart/cartQuantity'])
 
 
 
 onMounted(() => {
 
 })
+
+const updateQuantity=(index,e)=>{
+    console.log(index,e.target.value);
+    store.commit('cart/UPDATE_CART_ITEM', {index, qty:e.target.value})
+}
 
 const removeItem = (index) => {
     store.commit('cart/REMOVE_CART_ITEM', index)

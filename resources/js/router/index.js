@@ -13,6 +13,8 @@ const Attributes = () =>
     import ('../Admin/Pages/Attributes.vue')
 const Orders = () =>
     import ('../Admin/Pages/Orders.vue')
+const OrderEdit = () =>
+    import ('../Admin/Pages/OrderEdit.vue')
 const Users = () =>
     import ('../Admin/Pages/Users.vue')
 const AddUser = () =>
@@ -132,6 +134,14 @@ export const routes = [{
     {
         path: '/admin/orders',
         component: Orders,
+        meta: {
+            requiresAuth: true
+        }
+    },
+    {
+        path: '/admin/order/:id',
+        component: OrderEdit,
+        props: true,
         meta: {
             requiresAuth: true
         }

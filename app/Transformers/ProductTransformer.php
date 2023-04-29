@@ -37,7 +37,7 @@ class ProductTransformer extends Transformer
             'content' => $product->content,
             'status' => $product->status,
             'type' => $product->type,
-            'is_variable' => (bool) 'variable' == $product->type,
+            'is_variable' => 'variable' == $product->type,
             'price' => $product->price,
             'sale_price' => $product->sale_price,
             'stock_status' => $product->in_stock ? 'in_stock' : 'out_stock',

@@ -6,9 +6,11 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\VariationController;
+use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\ProductController as ControllersProductController;
 use App\Http\Controllers\ShopController;
+use App\Http\Controllers\OrderController;
 use App\Transformers\UserTransformer;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AttributeItemVariationController;
@@ -50,6 +52,9 @@ Route::prefix('shop')->group(function () {
     Route::get('attribute-items', [AttributeItemVariationController::class, 'index']);
 
 });
+
+Route::post('create-order', [OrderController::class, 'store']);
+
 Route::middleware('auth:sanctum')->group(function () {
 
     Route::prefix('product')->group(function () {
@@ -57,8 +62,6 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     Route::prefix('admin')->group(function () {
-
-        
 
         Route::middleware('role:admin')->group(function () {
 
@@ -76,7 +79,6 @@ Route::middleware('auth:sanctum')->group(function () {
                 Route::get('/{product}', [ProductController::class, 'edit']);
                 Route::put('/{product}', [ProductController::class, 'update']);
                 Route::delete('/{product}', [ProductController::class, 'destroy']);
-
             });
             Route::post('/variations/{product}', [ProductController::class, 'variations']);
             Route::prefix('category')->group(function () {
@@ -108,7 +110,17 @@ Route::middleware('auth:sanctum')->group(function () {
                 Route::post('/', [VariationController::class, 'store']);
 
             });
+
+            Route::prefix('order')->group(function () {
+                Route::get('/', [AdminOrderController::class, 'index']);
+                Route::post('/', [ProductController::class, 'store']);
+                Route::get('/{order}', [AdminOrderController::class, 'edit']);
+                Route::put('/{order}', [AdminOrderController::class, 'update']);
+                Route::delete('/{order}', [ProductController::class, 'destroy']);
+            });
         });
+
+
 
     });
 

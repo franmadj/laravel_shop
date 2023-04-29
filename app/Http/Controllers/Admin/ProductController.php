@@ -20,7 +20,7 @@ class ProductController extends Controller
             $product = $product->like(auth()->user()->id);
 
             return responder()->success($product, new ProductTransformer())->respond();
-        } catch (\Exception$e) {
+        } catch (\Exception $e) {
             return responder()->error($e->getMessage());
         }
     }
@@ -224,48 +224,52 @@ class ProductController extends Controller
      */
     public function update(UpdateProductRequest $request, Product $product)
     {
-        $validated = $request->validated();
-        if ($product->update($validated)) {
+        try {
+            $validated = $request->validated();
+            if ($product->update($validated)) {
 
-            $files = request('files', []);
-            if (!empty($files) && is_array($files)) {
-                $product->clearMediaCollection();
-                foreach ($files as $file) {
-                    if (isset($file) && !empty($file) && $file->isValid()) {
-                        $product
-                            ->addMedia($file)
-                            ->usingName('image')
-                            ->toMediaCollection();
+                $files = request('files', []);
+                if (!empty($files) && is_array($files)) {
+                    $product->clearMediaCollection();
+                    foreach ($files as $file) {
+                        if (isset($file) && !empty($file) && $file->isValid()) {
+                            $product
+                                ->addMedia($file)
+                                ->usingName('image')
+                                ->toMediaCollection();
+                        }
+
                     }
-
+                } elseif (request('clearFiles')) {
+                    $product->clearMediaCollection();
                 }
-            } elseif (request('clearFiles')) {
-                $product->clearMediaCollection();
-            }
 
-            $gallery = request('gallery', []);
-            if (!empty($gallery) && is_array($gallery)) {
-                $product->clearMediaCollection('gallery');
-                foreach ($gallery as $image) {
-                    if (isset($image) && !empty($image) && $image->isValid()) {
-                        $product
-                            ->addMedia($image)
-                            ->usingName('gallery_image')
-                            ->toMediaCollection('gallery');
+                $gallery = request('gallery', []);
+                if (!empty($gallery) && is_array($gallery)) {
+                    $product->clearMediaCollection('gallery');
+                    foreach ($gallery as $image) {
+                        if (isset($image) && !empty($image) && $image->isValid()) {
+                            $product
+                                ->addMedia($image)
+                                ->usingName('gallery_image')
+                                ->toMediaCollection('gallery');
+                        }
+
                     }
-
+                } elseif (request('clearGallery')) {
+                    $product->clearMediaCollection('gallery');
                 }
-            } elseif (request('clearGallery')) {
-                $product->clearMediaCollection('gallery');
-            }
 
-            if ($request->has('categories') and is_array($request->categories)) {
-                $product->categories()->detach();
-                $product->categories()->attach(collect($request->categories));
+                if ($request->has('categories') and is_array($request->categories)) {
+                    $product->categories()->detach();
+                    $product->categories()->attach(collect($request->categories));
+                }
+                return responder()->success()->respond(200);
             }
-            return responder()->success()->respond(200);
+            return responder()->error()->respond();
+        } catch (\Exception $e) {
+            return responder()->error($e->getMessage())->respond();
         }
-        return responder()->error()->respond();
     }
 
     /**

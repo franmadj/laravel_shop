@@ -24,8 +24,8 @@ const props = defineProps({
 })
 
 onMounted(() => {
-  console.log(props.product.type);
-  if (props.product.type = 'variable') {
+  console.log(props.product);
+  if (props.product.type == 'variable') {
     attrs = props.product.variations.attrs
     possibilities.value = props.product.variations.possibilities.filter(item => item.added);
     console.log('added possibilities', possibilities.value);
@@ -54,9 +54,11 @@ const changeAttribute = (attrSelect, i, e) => {
   const variations = e.target.value.split('|')
   console.log('changeAttribute', attrSelect.attrId, variations);
   const nextAttr = attrsSelect[i + 1]
+  //if there is a next dorpdown
   if (nextAttr) {
     const options = getAttributes(nextAttr.attrId, variations);
     nextAttr.options = options
+    //reset all next dropdowns
     for (let selectIndex = (i + 2); selectIndex <= 5; selectIndex++) {
       if (attrsSelect[selectIndex])
         attrsSelect[selectIndex].options = []

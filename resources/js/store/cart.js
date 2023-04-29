@@ -32,7 +32,7 @@ export default {
         ADD_CART_ITEMS(state, payload) {
             let exists = false;
             //state.cartItems = [];
-            console.log('UPDATE_CART_ITEMS', payload, state.cartItems);
+            console.log('ADD_CART_ITEMS', payload, state.cartItems);
             state.cartItems.forEach((item, key) => {
                 if (item.id == payload.id) {
                     if (payload.isVariable) {
@@ -55,6 +55,12 @@ export default {
 
             console.log('UPDAstate.cartItemsTE_CART_ITEMS', state.cartItems);
 
+        },
+        UPDATE_CART_ITEM(state, data) {
+            if (data.qty < 1)
+                store.commit('cart/REMOVE_CART_ITEM', data.index)
+            else
+                state.cartItems[data.index].quantity = parseInt(data.qty);
         }
     },
     actions: {

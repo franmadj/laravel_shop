@@ -15,11 +15,10 @@ class CreateOrdersTable extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->integer('user_id')->unsigned();
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->text('notes');
-            $table->enum('status',['pending','processing','completed']);
-            $table->float('amount',7,2);
+            $table->enum('status',['pending','processing','completed'])->default('pending');
+            $table->float('cart_total',7,2);
+            $table->json('buyer_details');
+            $table->json('cart_items');
             $table->timestamps();
         });
     }

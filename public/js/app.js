@@ -20744,6 +20744,10 @@ var Orders = function Orders() {
   return __webpack_require__.e(/*! import() */ "resources_js_Admin_Pages_Orders_vue").then(__webpack_require__.bind(__webpack_require__, /*! ../Admin/Pages/Orders.vue */ "./resources/js/Admin/Pages/Orders.vue"));
 };
 
+var OrderEdit = function OrderEdit() {
+  return __webpack_require__.e(/*! import() */ "resources_js_Admin_Pages_OrderEdit_vue").then(__webpack_require__.bind(__webpack_require__, /*! ../Admin/Pages/OrderEdit.vue */ "./resources/js/Admin/Pages/OrderEdit.vue"));
+};
+
 var Users = function Users() {
   return __webpack_require__.e(/*! import() */ "resources_js_Admin_Pages_Users_vue").then(__webpack_require__.bind(__webpack_require__, /*! ../Admin/Pages/Users.vue */ "./resources/js/Admin/Pages/Users.vue"));
 };
@@ -20875,6 +20879,13 @@ var routes = [{
 }, {
   path: '/admin/orders',
   component: Orders,
+  meta: {
+    requiresAuth: true
+  }
+}, {
+  path: '/admin/order/:id',
+  component: OrderEdit,
+  props: true,
   meta: {
     requiresAuth: true
   }
@@ -21050,7 +21061,7 @@ __webpack_require__.r(__webpack_exports__);
     ADD_CART_ITEMS: function ADD_CART_ITEMS(state, payload) {
       var exists = false; //state.cartItems = [];
 
-      console.log('UPDATE_CART_ITEMS', payload, state.cartItems);
+      console.log('ADD_CART_ITEMS', payload, state.cartItems);
       state.cartItems.forEach(function (item, key) {
         if (item.id == payload.id) {
           if (payload.isVariable) {
@@ -21066,6 +21077,9 @@ __webpack_require__.r(__webpack_exports__);
       });
       if (!exists) state.cartItems.push(payload);
       console.log('UPDAstate.cartItemsTE_CART_ITEMS', state.cartItems);
+    },
+    UPDATE_CART_ITEM: function UPDATE_CART_ITEM(state, data) {
+      if (data.qty < 1) store.commit('cart/REMOVE_CART_ITEM', data.index);else state.cartItems[data.index].quantity = parseInt(data.qty);
     }
   },
   actions: {
@@ -46880,7 +46894,7 @@ module.exports = JSON.parse('{"name":"axios","version":"0.21.4","description":"P
 /******/ 		// This function allow to reference async chunks
 /******/ 		__webpack_require__.u = (chunkId) => {
 /******/ 			// return url for filenames not based on template
-/******/ 			if ({"resources_js_Admin_Pages_Product_vue":1,"resources_js_Admin_Pages_ProductEdit_vue":1,"resources_js_Admin_Pages_Products_vue":1,"resources_js_Admin_Pages_Dashboard_vue":1,"resources_js_Admin_Pages_Categories_vue":1,"resources_js_Admin_Pages_Attributes_vue":1,"resources_js_Admin_Pages_Orders_vue":1,"resources_js_Admin_Pages_Users_vue":1,"resources_js_Admin_Pages_AddUser_vue":1,"resources_js_Admin_Pages_Account_vue":1,"resources_js_Auth_Pages_Login_vue":1,"resources_js_Auth_Pages_Register_vue":1,"resources_js_Auth_Pages_ForgotPassword_vue":1,"resources_js_Auth_Pages_ResetPassword_vue":1,"resources_js_Shop_Pages_Shop_vue":1,"resources_js_Shop_Pages_ShopProduct_vue":1,"resources_js_Shop_Pages_Cart_vue":1,"resources_js_Shop_Pages_Checkout_vue":1}[chunkId]) return "js/" + chunkId + ".js";
+/******/ 			if ({"resources_js_Admin_Pages_Product_vue":1,"resources_js_Admin_Pages_ProductEdit_vue":1,"resources_js_Admin_Pages_Products_vue":1,"resources_js_Admin_Pages_Dashboard_vue":1,"resources_js_Admin_Pages_Categories_vue":1,"resources_js_Admin_Pages_Attributes_vue":1,"resources_js_Admin_Pages_Orders_vue":1,"resources_js_Admin_Pages_OrderEdit_vue":1,"resources_js_Admin_Pages_Users_vue":1,"resources_js_Admin_Pages_AddUser_vue":1,"resources_js_Admin_Pages_Account_vue":1,"resources_js_Auth_Pages_Login_vue":1,"resources_js_Auth_Pages_Register_vue":1,"resources_js_Auth_Pages_ForgotPassword_vue":1,"resources_js_Auth_Pages_ResetPassword_vue":1,"resources_js_Shop_Pages_Shop_vue":1,"resources_js_Shop_Pages_ShopProduct_vue":1,"resources_js_Shop_Pages_Cart_vue":1,"resources_js_Shop_Pages_Checkout_vue":1}[chunkId]) return "js/" + chunkId + ".js";
 /******/ 			// return url for filenames based on template
 /******/ 			return undefined;
 /******/ 		};

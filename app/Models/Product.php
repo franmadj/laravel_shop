@@ -2,13 +2,13 @@
 
 namespace App\Models;
 
+use App\Traits\IsLikable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Image\Manipulations;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
-use Spatie\Image\Manipulations;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
-use App\Traits\IsLikable;
 
 class Product extends Model implements HasMedia
 {
@@ -59,19 +59,18 @@ class Product extends Model implements HasMedia
             $imageUrls['thumb'][] = $image->getFullUrl('thumb');
 
         }
-        return $imageUrls;
+        return $imageUrls ?: false;
     }
 
     public function registerMediaConversions(Media $media = null): void
     {
         $this->addMediaConversion('thumb')
             ->fit(Manipulations::FIT_MAX, 100, 100)
-            ->performOnCollections('default','gallery');
-        
+            ->performOnCollections('default', 'gallery');
+
         $this->addMediaConversion('medium')
             ->fit(Manipulations::FIT_MAX, 400, 400)
-            ->performOnCollections('default','gallery');
-
+            ->performOnCollections('default', 'gallery');
 
     }
 }
