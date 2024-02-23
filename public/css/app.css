@@ -2126,6 +2126,9 @@ video {
 .mb-2 {
   margin-bottom: 0.5rem;
 }
+.mb-6 {
+  margin-bottom: 1.5rem;
+}
 .mt-3 {
   margin-top: 0.75rem;
 }
@@ -2161,9 +2164,6 @@ video {
 }
 .mb-10 {
   margin-bottom: 2.5rem;
-}
-.mb-6 {
-  margin-bottom: 1.5rem;
 }
 .box-content {
   box-sizing: content-box;
@@ -2254,6 +2254,15 @@ video {
 .w-60 {
   width: 15rem;
 }
+.w-14 {
+  width: 3.5rem;
+}
+.w-12 {
+  width: 3rem;
+}
+.w-10 {
+  width: 2.5rem;
+}
 .w-\[50px\] {
   width: 50px;
 }
@@ -2262,9 +2271,6 @@ video {
 }
 .w-4\/5 {
   width: 80%;
-}
-.w-10 {
-  width: 2.5rem;
 }
 .w-\[100px\] {
   width: 100px;
@@ -2275,14 +2281,8 @@ video {
 .w-16 {
   width: 4rem;
 }
-.w-14 {
-  width: 3.5rem;
-}
 .w-\[49\.4\%\] {
   width: 49.4%;
-}
-.w-12 {
-  width: 3rem;
 }
 .min-w-full {
   min-width: 100%;
@@ -2328,9 +2328,6 @@ video {
 }
 .grow-0 {
   flex-grow: 0;
-}
-.table-auto {
-  table-layout: auto;
 }
 .transform {
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
@@ -2380,11 +2377,14 @@ video {
 .gap-4 {
   gap: 1rem;
 }
+.gap-6 {
+  gap: 1.5rem;
+}
 .gap-10 {
   gap: 2.5rem;
 }
-.gap-6 {
-  gap: 1.5rem;
+.gap-3 {
+  gap: 0.75rem;
 }
 .space-y-3 > :not([hidden]) ~ :not([hidden]) {
   --tw-space-y-reverse: 0;
@@ -2496,10 +2496,6 @@ video {
   --tw-border-opacity: 1;
   border-color: rgb(226 232 240 / var(--tw-border-opacity));
 }
-.border-gray-500 {
-  --tw-border-opacity: 1;
-  border-color: rgb(107 114 128 / var(--tw-border-opacity));
-}
 .bg-white {
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
@@ -2559,6 +2555,10 @@ video {
 .bg-slate-800 {
   --tw-bg-opacity: 1;
   background-color: rgb(30 41 59 / var(--tw-bg-opacity));
+}
+.bg-pink-100 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(252 231 243 / var(--tw-bg-opacity));
 }
 .bg-cover {
   background-size: cover;
@@ -2821,6 +2821,10 @@ video {
 .text-red-400 {
   --tw-text-opacity: 1;
   color: rgb(248 113 113 / var(--tw-text-opacity));
+}
+.text-blue-400 {
+  --tw-text-opacity: 1;
+  color: rgb(96 165 250 / var(--tw-text-opacity));
 }
 .underline {
   -webkit-text-decoration-line: underline;
