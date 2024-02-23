@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\Order;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreOrderRequest;
 use App\Http\Requests\UpdateOrderRequest;
-use App\Http\Controllers\Controller;
+use App\Models\Order;
 use App\Transformers\OrderTransformer;
 
 class OrderController extends Controller
@@ -18,10 +18,10 @@ class OrderController extends Controller
     public function index()
     {
         //try{
-            $orders=Order::all();
-            return responder()->success($orders, OrderTransformer::class)->respond(200);
+        $orders = Order::all();
+        return responder()->success($orders, OrderTransformer::class)->respond(200);
         //}catch(\Exception $e){
-            return responder()->error($e->getMessage().' '.$e->getFile().' '.$e->getLine())->respond();
+        return responder()->error($e->getMessage() . ' ' . $e->getFile() . ' ' . $e->getLine())->respond();
         //}
     }
 
@@ -81,15 +81,22 @@ class OrderController extends Controller
      */
     public function update(UpdateOrderRequest $request, Order $order)
     {
-        try {
+       // try {
+
             $validated = $request->validated();
-            if ($order->update($validated)) {
-                return responder()->success()->respond(200);
-            }
-            return responder()->error()->respond();
-        } catch (\Exception $e) {
+
+
+
+            $order->buyer_details=$validated['buyer_details'];
+            $order->status = $validated['status'];
+            $order->save();
+
+            
+            return responder()->success($order)->respond(200);
+
+        //} catch (\Exception $e) {
             return responder()->error($e->getMessage())->respond();
-        }
+        //}
     }
 
     /**

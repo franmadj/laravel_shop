@@ -5,8 +5,8 @@
             <form class="flex flex-col lg:flex-row gap-5">
                 <!--LEFT SIDE-->
                 <div class="w-full lg:w-4/5">
-                    <h1 class="font-bold mb-2 text-xl">Order #15445 details</h1>
-                    <p class="font-medium mb-6">Payment via Cash on April 13, 2023 @ 10:12 pm. Customer 24.45.154.153</p>
+                    <h1 class="font-bold mb-2 text-xl">Order #{{ order.id }} details</h1>
+                    <p class="font-medium mb-6">Payment via Cash on {{ order.date }} @ 10:12 pm. Customer 24.45.154.153</p>
                     <div class="flex flex-col sm:flex-row gap-6 p-4 border border-gray-200 rounded mb-4">
                         <div class="w-full sm:w-1/5">
                             <h3 class="mb-2 text-lg font-medium">General</h3>
@@ -16,9 +16,10 @@
                             </div>
                             <div class="mb-4">
                                 <label for="content">Status:</label>
-                                <select v-model="order.status" class="p-1 border rounded-sm shadow-sm block w-full">
-                                    <option value="simple">Pending</option>
-                                    <option value="variable">Completed</option>
+                                <select v-model="order.status" class="p-2 border rounded-sm shadow-sm block w-full">
+                                    <option value="pending">Pending</option>
+                                    <option value="processing">Processing</option>
+                                    <option value="completed">Completed</option>
                                 </select>
                             </div>
                         </div>
@@ -33,7 +34,7 @@
                                     </path>
                                 </svg>
                             </h3>
-                            <div v-if="billing_preview">
+                            <div v-show="billing_preview">
                                 <p v-text="order.buyer_name"></p>
                                 <p v-text="order.buyer_details.address"></p>
                                 <p>{{ order.buyer_details.state }} {{ order.buyer_details.pc }}</p>
@@ -41,7 +42,7 @@
                                 <p v-text="order.buyer_details.phone"></p>
 
                             </div>
-                            <div v-else>
+                            <div v-show="!billing_preview">
                                 <div class="flex justify-between mb-4 gap-2">
                                     <div class="w-full">
                                         <label for="first_name">First Name:</label>
@@ -90,7 +91,7 @@
                                 <div class="flex justify-between mb-4 gap-2">
                                     <div class="w-full">
                                         <label for="first_name">State:</label>
-                                        <select class="p-1 border rounded-sm shadow-sm block w-full"
+                                        <select class="p-2 border rounded-sm shadow-sm block w-full"
                                             v-model="order.buyer_details.state">
                                             <StateSelectOptions></StateSelectOptions>
                                         </select>
@@ -190,7 +191,7 @@
                     <div class="p-4 border border-gray-200 rounded">
                         <table class="w-full">
                             <thead>
-                                <tr class="flex p-3 bg-gray-200">
+                                <tr class="flex p-3 bg-gray-100">
                                     <th class="w-full text-left">Item</th>
                                     <th class="w-14 text-left">Cost</th>
                                     <th class="w-12 text-left">Qty</th>
@@ -199,19 +200,34 @@
                             </thead>
                             <tbody>
                                 <tr v-for="(item, index) in order.cart_items" :key="index" class="flex p-3">
-                                    <td class="flex gap-2 w-full">
-                                        <img :src="item.image" class="w w-10"/>
+                                    <td class="flex gap-3 w-full items-start">
+                                        <img :src="item.image" class="w-14" />
                                         <div>
                                             <p v-text="item.title"></p>
+                                            <div v-if="item.isVariable">
+                                                <p v-text="item.variation.name"></p>
+                                                <p>Variation ID: {{ item.variation.id }}</p>
+
+                                            </div>
                                         </div>
                                     </td>
-                                    
-                                    <td class="w-14 text-left">{{ item.price }}</td>
+
+                                    <td class="w-14 text-left">${{ item.isVariable ? item.variation.price : item.price }}
+                                    </td>
                                     <td class="w-12 text-left">{{ item.quantity }}</td>
-                                    <td class="w-14 text-left">{{ item.quantity }}</td>
+                                    <td class="w-14 text-left">${{ item.isVariable ? item.variation.price : item.price *
+                                        item.quantity }}</td>
                                 </tr>
-                                
                             </tbody>
+                            <tr class="p-3 flex justify-end">
+                                <td colspan="4" class="text-right font-bold">Order Total: ${{ order.cart_total }}</td>
+                            </tr>
+                            <tr class="p-3 border-t border-gray-200 flex justify-end">
+                                <td colspan="4" class="text-right font-bold">Total payed: ${{ order.cart_total }}</td>
+                            </tr>
+                            <tfoot>
+
+                            </tfoot>
                         </table>
                     </div>
 
@@ -219,6 +235,22 @@
                 </div>
                 <!--RIGHT SIDE -->
                 <div class="w-full lg:w-1/5">
+                    <div class="p-4 border border-gray-200 rounded">
+                        <div class="mb-4">
+                            <div>
+                                <div class="bg-gray-200 p-2 mb-1">
+                                    Awaiting BACS payment Order status changed from Pending payment to On hold.
+                                </div>
+                                <p class="f text-xs text-gray-300">April 13, 2023 at 10:11 pm <a class="f text-blue-400"
+                                        href="">Delete note</a></p>
+
+                            </div>
+
+                        </div>
+                        <textarea class="s border border-gray-300 w-full"></textarea>
+                        <button class="px-2 py-1 bg-blue-700 block w-full rounded-sm text-white">Add Note</button>
+
+                    </div>
                     <button class="px-2 py-1 bg-blue-700 block w-full rounded-sm text-white" type="button"
                         @click="update()">Update
                         Order</button>
@@ -266,6 +298,13 @@ const props = defineProps({
     id: { type: Number, required: false, default: false }
 })
 
+const getBuyerDetails = (key) => { console.log('ddddd',order.value);
+    if (order.value.buyer_details.hasOwnProperty(key))
+        return order.value.buyer_details[key]
+    return ''
+
+}
+
 
 const edit = async (id) => {
     await axios.get('/api/admin/order/' + id)
@@ -284,11 +323,11 @@ const edit = async (id) => {
 
 const update = async () => {
     console.log('update')
-    console.log('order.value', order.value);
-    axios.post('/api/admin/order/' + props.id, order)
+    console.log('order.value', order.value); 
+    axios.put('/api/admin/order/' + order.value.id, order.value)
         .then(response => {
             if (response.data.success) {
-                toaster.success(`Product updated`);
+                toaster.success(`Order updated`);
             } else {
                 toaster.error(`Error`);
             }
