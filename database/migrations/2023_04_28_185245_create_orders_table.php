@@ -15,7 +15,7 @@ class CreateOrdersTable extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->enum('status',['pending','processing','completed'])->default('pending');
+            $table->enum('status',['pending','processing','completed','cancelled'])->default('pending');
             $table->float('cart_total',7,2);
             $table->json('buyer_details');
             $table->json('cart_items');
