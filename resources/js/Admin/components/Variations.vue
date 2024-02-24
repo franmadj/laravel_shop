@@ -186,9 +186,11 @@ const managePosibleVariations = () => {
     if (variations.possibilities.length) {
         const intersection = selectedAttrsIds.filter(x => variations.attrs.includes(x));
         const attrsLength = selectedAttrsIds.length;
+
         console.log(selectedAttrsIds, variations.attrs, intersection)
         console.log(variations.attrs.length, attrsLength, intersection.length);
         console.log(variations.attrs.length == attrsLength && intersection.length == attrsLength)
+        //if no changes from the previous selection
         if (variations.attrs.length == attrsLength && intersection.length == attrsLength) {
             showModal.value = true; 
             return;
@@ -208,15 +210,22 @@ const createPosibleVariations = () => {
     const lastIndex = selectedAttrs.length - 1;
     console.log(selectedAttrs)
 
+    //if selected attributes and not more than 3
+
     if (selectedAttrs.length && selectedAttrs.length < 4) {
         variations.attrs = selectedAttrsIds;
         variations.possibilities = [];
         let countTrack = [0, 0, 0];
         let possibilitiesItem = []
-        let keep = true;
-        while (keep) {
+        let keepLooking = true;
+        while (keepLooking) {
             selectedAttrs.forEach((attr, i) => {
-                possibilitiesItem.push({ id: attr.items[countTrack[i]].id, name: attr.items[countTrack[i]].name, attributeId:attr.id, attributeName:attr.name })
+                possibilitiesItem.push({ 
+                    id: attr.items[countTrack[i]].id, 
+                    name: attr.items[countTrack[i]].name, 
+                    attributeId:attr.id, 
+                    attributeName:attr.name 
+                })
                 if (i == lastIndex) {
                     for (let key = lastIndex; key >= 0; key--) {
                         let nextItem = countTrack[key] + 1
@@ -225,7 +234,7 @@ const createPosibleVariations = () => {
                             break;
                         } else {
                             if (!key)
-                                keep = false
+                               keepLooking = false
                             else
                                 countTrack[key] = 0;
                         }
