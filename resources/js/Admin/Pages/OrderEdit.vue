@@ -2,11 +2,11 @@
     <GlobalTransition>
         <div v-if="show" class="min-h-screen p-6 grow overflow-hidden text-gray-600">
             <h1 class="text-3xl font-bold mb-3 uppercase text-gray-600">Edit Order</h1>
-            <form class="flex flex-col lg:flex-row gap-5">
+            <form class="flex flex-col lg:flex-row gap-5" v-if="order.buyer_details">
                 <!--LEFT SIDE-->
                 <div class="w-full lg:w-4/5">
                     <h1 class="font-bold mb-2 text-xl">Order #{{ order.id }} details</h1>
-                    <p class="font-medium mb-6">Payment via Cash on {{ order.date }} @ 10:12 pm. Customer 24.45.154.153</p>
+                    <p class="font-medium mb-6">Payment via Cash on {{ order.date }}</p>
                     <div class="flex flex-col sm:flex-row gap-6 p-4 border border-gray-200 rounded mb-4">
                         <div class="w-full sm:w-1/5">
                             <h3 class="mb-2 text-lg font-medium">General</h3>
@@ -235,23 +235,8 @@
                 </div>
                 <!--RIGHT SIDE -->
                 <div class="w-full lg:w-1/5">
-                    <div class="p-4 border border-gray-200 rounded">
-                        <div class="mb-4">
-                            <div>
-                                <div class="bg-gray-200 p-2 mb-1">
-                                    Awaiting BACS payment Order status changed from Pending payment to On hold.
-                                </div>
-                                <p class="f text-xs text-gray-300">April 13, 2023 at 10:11 pm <a class="f text-blue-400"
-                                        href="">Delete note</a></p>
-
-                            </div>
-
-                        </div>
-                        <textarea class="s border border-gray-300 w-full"></textarea>
-                        <button class="px-2 py-1 bg-blue-700 block w-full rounded-sm text-white">Add Note</button>
-
-                    </div>
-                    <button class="px-2 py-1 bg-blue-700 block w-full rounded-sm text-white" type="button"
+                    <OrderNotes :orderId="order.id" :notes="order.notes"/>
+                    <button class="px-2 py-1 mt-2 bg-blue-700 block w-full rounded-sm text-white" type="button"
                         @click="update()">Update
                         Order</button>
                 </div>
@@ -265,7 +250,7 @@ import { ref, onMounted, reactive } from 'vue'
 import { createToaster } from "@meforma/vue-toaster"
 import { createConfirmDialog } from 'vuejs-confirm-dialog'
 
-import Variations from '../components/Variations.vue'
+import OrderNotes from '../components/OrderNotes.vue'
 import pFns from '../composables/products'
 import helpers from '../../compositions/helpers'
 import ConfirmDialog from '../../components/ConfirmDialog.vue'
@@ -298,7 +283,7 @@ const props = defineProps({
     id: { type: Number, required: false, default: false }
 })
 
-const getBuyerDetails = (key) => { console.log('ddddd',order.value);
+const getBuyerDetails = (key) => {
     if (order.value.buyer_details.hasOwnProperty(key))
         return order.value.buyer_details[key]
     return ''

@@ -7,6 +7,7 @@ use App\Http\Requests\StoreOrderRequest;
 use App\Http\Requests\UpdateOrderRequest;
 use App\Models\Order;
 use App\Transformers\OrderTransformer;
+use App\Transformers\OrderNoteTransformer;
 
 class OrderController extends Controller
 {
@@ -52,9 +53,13 @@ class OrderController extends Controller
      * @param  \App\Models\Order  $order
      * @return \Illuminate\Http\Response
      */
-    public function show(Order $order)
+    public function getNotes(Order $order)
     {
-        //
+        try {
+            return responder()->success($order->notes, OrderNoteTransformer::class)->respond(200);
+        } catch (\Exception $e) {
+            return responder()->error($e->getMessage())->respond();
+        }
     }
 
     /**
@@ -81,21 +86,18 @@ class OrderController extends Controller
      */
     public function update(UpdateOrderRequest $request, Order $order)
     {
-       // try {
+        // try {
 
-            $validated = $request->validated();
+        $validated = $request->validated();
 
+        $order->buyer_details = $validated['buyer_details'];
+        $order->status = $validated['status'];
+        $order->save();
 
-
-            $order->buyer_details=$validated['buyer_details'];
-            $order->status = $validated['status'];
-            $order->save();
-
-            
-            return responder()->success($order)->respond(200);
+        return responder()->success($order)->respond(200);
 
         //} catch (\Exception $e) {
-            return responder()->error($e->getMessage())->respond();
+        return responder()->error($e->getMessage())->respond();
         //}
     }
 

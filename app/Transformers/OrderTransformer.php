@@ -30,8 +30,9 @@ class OrderTransformer extends Transformer
     public function transform(Order $order)
     {
         $data=$order->toArray();
-        $data['date']=$order->created_at->format('Y M, d');
+        $data['date']=$order->created_at->format('Y M, d h:i:s a');
         $data['buyer_name']=$order->buyer_name;
+        $data['notes']=$order->notes;
         return $data;
     }
 }

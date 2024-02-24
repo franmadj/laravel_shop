@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\VariationController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
+use App\Http\Controllers\Admin\OrderNoteController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\ProductController as ControllersProductController;
 use App\Http\Controllers\ShopController;
@@ -113,10 +114,19 @@ Route::middleware('auth:sanctum')->group(function () {
 
             Route::prefix('order')->group(function () {
                 Route::get('/', [AdminOrderController::class, 'index']);
+                Route::get('{order}/notes', [AdminOrderController::class, 'getNotes']);
                 Route::post('/', [ProductController::class, 'store']);
                 Route::get('/{order}', [AdminOrderController::class, 'edit']);
                 Route::put('/{order}', [AdminOrderController::class, 'update']);
                 Route::delete('/{order}', [ProductController::class, 'destroy']);
+            });
+
+            Route::prefix('note')->group(function () {
+                Route::get('/', [AdminOrderController::class, 'index']);
+                Route::post('/', [OrderNoteController::class, 'store']);
+                Route::get('/{order}', [OrderNoteController::class, 'orderNotes']);
+                Route::put('/{order}', [AdminOrderController::class, 'update']);
+                Route::delete('/{note}', [OrderNoteController::class, 'destroy']);
             });
         });
 

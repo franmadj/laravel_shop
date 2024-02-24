@@ -31,6 +31,11 @@ class Order extends Model
         return $this->hasMany(OrderItem::class);
     }
 
+    public function notes()
+    {
+        return $this->hasMany(OrderNote::class);
+    }
+
     public function getBuyerNameAttribute()
     {
         $name = [];
