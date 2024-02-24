@@ -17,6 +17,3 @@ yarn-error.log
 /.idea
 /.vscode
 /nbproject
-public/css/app.css
-public/js/resources_js_Admin_Pages_Orders_vue.js
-public/js/resources_js_Admin_Pages_ProductEdit_vue.js
