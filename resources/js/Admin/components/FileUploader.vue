@@ -2,7 +2,8 @@
 	<div class="w w-full py-8 rounded-md border-dotted border-gray-400 border-2 bg-slate-100 my-4 p-3 text-center"
 		@dragenter.prevent="setActive" @dragover.prevent="setActive" @dragleave.prevent="setInactive"
 		@drop.prevent="onDrop">
-		<label :for="'file-input-'+props.name" class="flex justify-center" :class="{ 'hidden': files.length >= props.maxFiles }">
+		<label :for="'file-input-' + props.name" class="flex justify-center"
+			:class="{ 'hidden': files.length >= props.maxFiles }">
 			<span v-if="active">
 				<span>Drop Them Here</span>
 				<span class="smaller">to add them</span>
@@ -13,7 +14,7 @@
 					or <strong><em>click here</em></strong> to select files
 				</span>
 			</span>
-			<input class="hidden" type="file" :id="'file-input-'+props.name" multiple @change="onInputChange" />
+			<input class="hidden" type="file" :id="'file-input-' + props.name" multiple @change="onInputChange" />
 		</label>
 		<ul class="image-list flex justify-center gap-1" v-show="files.length">
 			<FilePreview v-for="file of files" :key="file.id" :file="file" tag="li" @remove="removeFile" />
@@ -76,6 +77,8 @@ function setInactive() {
 const onDrop = (e) => {
 	console.log('onDrop maxFile' + props.maxFiles);
 	console.log('e.dataTransfer.files: ', e.dataTransfer.files);
+	if (e.target.files.length > props.maxFiles)
+		return false;
 	setInactive()
 	addFiles(e.dataTransfer.files)
 	emit('files-updated', files)
@@ -86,6 +89,8 @@ const onDrop = (e) => {
 const onInputChange = (e) => {
 	console.log('onInputChange maxFile' + props.maxFiles);
 	console.log('e.target.files', e.target.files);
+	if (!e.target.files.length || (e.target.files.length > props.maxFiles))
+		return false;
 	addFiles(e.target.files)
 	emit('files-updated', files)
 	emit('any-files-update', true)

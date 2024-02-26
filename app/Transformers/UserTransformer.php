@@ -34,9 +34,12 @@ class UserTransformer extends Transformer
             'id' => (int) $user->id,
             'name' => $user->name,
             'email' => $user->email,
+            'phone' => $user->phone,
+            'bio' => $user->bio,
             'active' => $user->active,
             'isAdmin' => $user->hasRole(['admin']),
-            'roles' => implode(' | ',$user->getRoleNames()->toArray()),
+            'role' => $user->getRoleNames()->toArray()[0],
+            'photo'=>$user->getFirstMediaUrl('user-photos'),
 
         ];
     }

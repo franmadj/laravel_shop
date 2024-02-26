@@ -17,8 +17,10 @@ const OrderEdit = () =>
     import ('../Admin/Pages/OrderEdit.vue')
 const Users = () =>
     import ('../Admin/Pages/Users.vue')
-const AddUser = () =>
-    import ('../Admin/Pages/AddUser.vue')
+const User = () =>
+    import ('../Admin/Pages/User.vue')
+const UserEdit = () =>
+    import ('../Admin/Pages/UserEdit.vue')
 const Account = () =>
     import ('../Admin/Pages/Account.vue')
 const Login = () =>
@@ -155,7 +157,15 @@ export const routes = [{
     },
     {
         path: '/admin/add-user',
-        component: AddUser,
+        component: User,
+        meta: {
+            requiresAuth: true
+        }
+    },
+    {
+        path: '/admin/user/:id',
+        component: UserEdit,
+        props: true,
         meta: {
             requiresAuth: true
         }

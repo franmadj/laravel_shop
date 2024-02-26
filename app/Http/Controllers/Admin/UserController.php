@@ -2,17 +2,18 @@
 
 namespace App\Http\Controllers\Admin;
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreUserRequest;
+use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
 use App\Transformers\UserTransformer;
-use App\Http\Controllers\Controller;
-use App\Http\Requests\UpdateUserRequest;
+use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
 
-
-    function index(){
+    public function index()
+    {
 
         $users = new User;
         if ($search = request('search', '')) {
@@ -37,8 +38,28 @@ class UserController extends Controller
         //dd($users->toSql());
 
         return responder()->success($users->get(), UserTransformer::class)->respond(200);
+    }
 
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \App\Http\Requests\StoreUserRequest  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(StoreUserRequest $request)
+    {
+        $validated = $request->validated();
+        if ($user = User::create($validated)) {
+            $user->assignRole($validated['role']);
+            $photo = request()->file('photo');
+            if (isset($photo) && !empty($photo) && $photo->isValid()) {
+                $user->addMedia($photo)
+                    ->toMediaCollection('user-photos');
+            }
+            return responder()->success(['id' => $user->id])->respond(201);
 
+        }
+        
     }
 
     /**
@@ -63,44 +84,13 @@ class UserController extends Controller
     {
         $validated = $request->validated();
         if ($user->update($validated)) {
-
-            $files = request('files', []);
-            if (!empty($files) && is_array($files)) {
-                $user->clearMediaCollection();
-                foreach ($files as $file) {
-                    if (isset($file) && !empty($file) && $file->isValid()) {
-                        $user
-                            ->addMedia($file)
-                            ->usingName('image')
-                            ->toMediaCollection();
-                    } 
-
-                }
+            $user->syncRoles([$validated['role']]);
+            $photo = request()->file('photo');
+            if (isset($photo) && !empty($photo) && $photo->isValid()) {
+                $user->addMedia($photo)
+                    ->toMediaCollection('user-photos');
             }elseif (request('clearFiles')) {
-                $user->clearMediaCollection();
-            }
-
-
-            $gallery = request('gallery', []);
-            if (!empty($gallery) && is_array($gallery)) {
-                $user->clearMediaCollection('gallery');
-                foreach ($gallery as $image) {
-                    if (isset($image) && !empty($image) && $image->isValid()) {
-                        $user
-                            ->addMedia($image)
-                            ->usingName('gallery_image')
-                            ->toMediaCollection('gallery');
-                    } 
-
-                }
-            }elseif (request('clearGallery')) {
-                $user->clearMediaCollection('gallery');
-            }
-
-
-            if ($request->has('categories') and is_array($request->categories)) {
-                $user->categories()->detach();
-                $user->categories()->attach(collect($request->categories));
+                $user->clearMediaCollection('user-photos');
             }
             return responder()->success()->respond(200);
         }

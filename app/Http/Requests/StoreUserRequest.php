@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class UpdateUserRequest extends FormRequest {
+class StoreUserRequest extends FormRequest {
 
     /**
      * Determine if the user is authorized to make this request.
@@ -23,11 +23,11 @@ class UpdateUserRequest extends FormRequest {
      */
     public function rules() {
         return [
-            'name' => 'required|max:255|unique:users,name,'.$this->user->id,
-            'email' => 'required|email:rfc|unique:users,email,'.$this->user->id,//,dns
-            'password' => 'nullable|confirmed|max:255',
+            'name' => 'required|max:255|unique:users,name',
+            'email' => 'required|email:rfc|unique:users,email',//,dns
+            'password' => 'required|confirmed|max:255',
             'role' => 'required|in:admin,user',
-            'phone' => 'nullable|max:12|unique:users,phone,'.$this->user->id,
+            'phone' => 'nullable|max:12|unique:users,phone',
             'bio' => 'nullable|max:255',
             'photo'=>'nullable|image'
         ];
@@ -42,7 +42,7 @@ class UpdateUserRequest extends FormRequest {
         return [
             'name.required' => 'El nombre es obligatorio',
             'email.required' => 'El email es obligatorio',
-            'password.required' => 'La constraseña no es valida',
+            'password.required' => 'La constraseña es obligatoria',
             'role.required' => 'Selecciona un role',
         ];
     }

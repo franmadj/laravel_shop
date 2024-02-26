@@ -102,6 +102,7 @@ onMounted(() => {
 const resetFilter = () => {
     filter.search = '';
     filter.role = '';
+    populateUsers();
 
 }
 
