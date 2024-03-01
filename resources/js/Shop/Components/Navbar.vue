@@ -49,11 +49,14 @@
                         </svg>
                     </a>
                     <ul class="absolute top-5 z-10 -left-3 hidden group-hover:block pt-3">
-                        <li><a href=""
-                                class="py-1 px-5 border-b border-cyan-100 block bg-neutral-50 hover:bg-neutral-100">Dashboard</a>
+                        <li v-if="isAuthenicated">
+                            <a href="/admin" class="py-1 px-5 border-b border-cyan-100 block bg-neutral-50 hover:bg-neutral-100">Dashboard</a>
                         </li>
-                        <li><a href=""
-                                class="py-1 px-5 border-b border-cyan-100 block bg-neutral-50 hover:bg-neutral-100">Dashboard</a>
+                        <li v-if="isAuthenicated">
+                            <a class="py-1 px-5 border-b border-cyan-100 block bg-neutral-50 hover:bg-neutral-100" href="#" @click="logout">Log Out</a>
+                        </li>
+                        <li v-else>
+                            <a class="py-1 px-5 border-b border-cyan-100 block bg-neutral-50 hover:bg-neutral-100 min-w-[86px]" href="/login">Log In</a>
                         </li>
                     </ul>
                 </li>
@@ -131,6 +134,8 @@ onMounted(() => {
 const cartItems = computed(() => store.getters['cart/cartItems'])
 const cartQuantity = computed(() => store.getters['cart/cartQuantity'])
 const cartTotal = computed(() => store.getters['cart/cartTotal'])
+const isAuthenicated = ref(store.getters['auth/authenticated'])
+const isAdmin = ref(store.getters['auth/user'].isAdmin)
 
 const cartPreview = ref(false)
 
@@ -163,6 +168,24 @@ const cartItemTitle = (cartItem) => {
     if (cartItem.isVariable)
         title += '<span class="block text-xs font-bold">' + cartItem.variation.name + '</span>'
     return title
+}
+
+const logout = (e) => {
+    console.log('ss')
+    e.preventDefault()
+    //axios.get('/sanctum/csrf-cookie').then(response => {
+    axios.post('/api/logout')
+        .then(response => {
+            if (response.data.success) {
+                store.dispatch('auth/logout')
+            } else {
+                console.log(response)
+            }
+        })
+        .catch(function (error) {
+            console.error(error);
+        });
+    //})
 }
 
 

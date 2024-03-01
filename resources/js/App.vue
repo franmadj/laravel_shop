@@ -1,6 +1,6 @@
 <template>
 
-    <div class="block lg:flex" v-if="(isLoggedIn && user.isAdmin && !route.meta.isPublicPage)">
+    <div class="block lg:flex" v-if="(isLoggedIn && !route.meta.isPublicPage)">
         <SidebarMenu />
         <router-view></router-view>
     </div>

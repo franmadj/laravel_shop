@@ -15,6 +15,10 @@ const Orders = () =>
     import ('../Admin/Pages/Orders.vue')
 const OrderEdit = () =>
     import ('../Admin/Pages/OrderEdit.vue')
+const MyOrders = () =>
+    import ('../Admin/Pages/MyOrders.vue')
+const MyOrder = () =>
+    import ('../Admin/Pages/MyOrder.vue')
 const Users = () =>
     import ('../Admin/Pages/Users.vue')
 const User = () =>
@@ -101,7 +105,8 @@ export const routes = [{
         path: '/admin/product',
         component: Product,
         meta: {
-            requiresAuth: true
+            requiresAuth: true,
+            requiresAdmin: true
         }
     },
     {
@@ -109,35 +114,40 @@ export const routes = [{
         component: ProductEdit,
         props: true,
         meta: {
-            requiresAuth: true
+            requiresAuth: true,
+            requiresAdmin: true
         }
     },
     {
         path: '/admin/products',
         component: Products,
         meta: {
-            requiresAuth: true
+            requiresAuth: true,
+            requiresAdmin: true
         }
     },
     {
         path: '/admin/categories',
         component: Categories,
         meta: {
-            requiresAuth: true
+            requiresAuth: true,
+            requiresAdmin: true
         }
     },
     {
         path: '/admin/attributes',
         component: Attributes,
         meta: {
-            requiresAuth: true
+            requiresAuth: true,
+            requiresAdmin: true
         }
     },
     {
         path: '/admin/orders',
         component: Orders,
         meta: {
-            requiresAuth: true
+            requiresAuth: true,
+            requiresAdmin: true
         }
     },
     {
@@ -145,21 +155,24 @@ export const routes = [{
         component: OrderEdit,
         props: true,
         meta: {
-            requiresAuth: true
+            requiresAuth: true,
+            requiresAdmin: true
         }
     },
     {
         path: '/admin/users',
         component: Users,
         meta: {
-            requiresAuth: true
+            requiresAuth: true,
+            requiresAdmin: true
         }
     },
     {
         path: '/admin/add-user',
         component: User,
         meta: {
-            requiresAuth: true
+            requiresAuth: true,
+            requiresAdmin: true
         }
     },
     {
@@ -167,12 +180,28 @@ export const routes = [{
         component: UserEdit,
         props: true,
         meta: {
-            requiresAuth: true
+            requiresAuth: true,
+            requiresAdmin: true
         }
     },
     {
         path: '/admin/account',
         component: Account,
+        meta: {
+            requiresAuth: true
+        }
+    },
+    {
+        path: '/admin/my-orders',
+        component: MyOrders,
+        meta: {
+            requiresAuth: true
+        }
+    },
+    {
+        path: '/admin/my-order/:id',
+        component: MyOrder,
+        props: true,
         meta: {
             requiresAuth: true
         }
@@ -208,20 +237,28 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-    if (to.matched.some(record => record.meta.requiresAuth)) {
-        if (window.Laravel.isLoggedin) {
-            next();
-            return;
-        } else {
-            router.push('/login');
-        }
-    } else {
-        if (window.Laravel.isLoggedin && '/login' == to.path) {
-            window.location.href = "/admin";
-            return;
-        }
-        next();
+    console.log('to', to);
+
+    const notAllowAuthPages = window.Laravel.isLoggedin && ['/login', '/register', '/forgot-password'].includes(to.path);
+    const needsAdmin = to.matched.some(record => record.meta.requiresAdmin) && !window.Laravel.isAdmin;
+
+    if (notAllowAuthPages || needsAdmin) {
+        router.push('/admin');
+        return;
     }
+
+    const needsLoggedIn = to.matched.some(record => record.meta.requiresAuth) && !window.Laravel.isLoggedin;
+
+    if (needsLoggedIn) {
+        router.push('/login');
+        return;
+    }
+
+    next();
+
+
+
+
 });
 
 export default router;

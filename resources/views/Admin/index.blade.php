@@ -18,7 +18,8 @@
     <script>
         window.Laravel = {!!json_encode([
             'isLoggedin' => true,
-            'user' => Auth::user()
+            'user' => Auth::user(),
+            'isAdmin' => Auth::user()->isAdmin
         ])!!}
     </script>
 @else

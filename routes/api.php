@@ -62,7 +62,14 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::patch('{product}/like', [ProductController::class, 'likeToggle']);
     });
 
+    
+
     Route::prefix('admin')->group(function () {
+
+        Route::prefix('my-orders')->group(function () {
+            Route::get('/', [AdminOrderController::class, 'myOrders']);
+            Route::get('/{order}', [AdminOrderController::class, 'myOrderView']);
+        });
 
         Route::middleware('role:admin')->group(function () {
 

@@ -24,7 +24,7 @@
         <ul class="w-full block mx-auto bg-gray-800 h-full">
 
 
-            <li v-if="isAdmin" class="relative">
+            <li class="relative">
                 <router-link
                     class="peer p-2 bg-gray-800 font-normal text-white hover:bg-gray-700 hover:text-blue-400 border-white border-b flex"
                     to="/admin">
@@ -136,6 +136,27 @@
                         stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round"
                             d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg> My Orders
+                </a>
+
+                <ul class="relative left-0 top-0 bg-salte-400 w-full block peer-hover:block hover:block rounded-sm 
+                lg:hidden lg:absolute lg:left-full lg:w-fit">
+                    <li>
+                        <router-link class="whitespace-nowrap p-2 bg-gray-800 font-normal text-white block hover:bg-gray-700 hover:text-blue-400 border-white border-b rounded-sm px-5
+                            pl-10 lg:pl-2" to="/admin/my-orders">List</router-link>
+                    </li>
+                    
+
+                </ul>
+            </li>
+
+            <li class="relative">
+                <a class="peer p-2 bg-gray-800 font-normal text-white hover:bg-gray-700 hover:text-blue-400 border-white border-b flex"
+                    href="#">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-1" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                     </svg> Account
                 </a>
 
@@ -186,7 +207,7 @@ const logout = (e) => {
     axios.post('/api/logout')
         .then(response => {
             if (response.data.success) {
-                store.dispatch('auth/login')
+                store.dispatch('auth/logout')
                 
             } else {
                 console.log(response)

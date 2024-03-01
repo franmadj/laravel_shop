@@ -52,6 +52,10 @@ class User extends Authenticatable implements HasMedia
         return $this->hasMany(Order::class);
     }
 
+    public function getIsAdminAttribute(){
+        return $this->hasRole('admin');
+    }
+
     public function registerMediaConversions(Media $media = null): void
     {
         $this->addMediaConversion('thumb')

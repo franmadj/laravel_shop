@@ -15,7 +15,7 @@ export default {
     },
     mutations: {
         SET_AUTHENTICATED(state, value) {
-            state.authenticated = value
+            state.authenticated = true
         },
         SET_USER(state, value) {
             state.user = value

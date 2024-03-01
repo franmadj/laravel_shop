@@ -6,8 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreOrderRequest;
 use App\Http\Requests\UpdateOrderRequest;
 use App\Models\Order;
-use App\Transformers\OrderTransformer;
 use App\Transformers\OrderNoteTransformer;
+use App\Transformers\OrderTransformer;
+use Carbon\Carbon;
 
 class OrderController extends Controller
 {
@@ -18,12 +19,78 @@ class OrderController extends Controller
      */
     public function index()
     {
-        //try{
-        $orders = Order::all();
-        return responder()->success($orders, OrderTransformer::class)->respond(200);
-        //}catch(\Exception $e){
-        return responder()->error($e->getMessage() . ' ' . $e->getFile() . ' ' . $e->getLine())->respond();
-        //}
+
+        try {
+            $orders = new Order;
+            if ($search = request('search', '')) {
+                $orders = $orders->where(function ($query) use ($search) {
+                    $query->where('title', 'like', "%$search%")->orWhere('content', 'like', "%$search%");
+                });
+                //$products=$products->where('title', 'like', "%$search%")->orWhere('content', 'like', "%$search%");
+            }
+            if ($status = request('status', '')) {
+                $orders = $orders->where('status', $status);
+            }
+            if ($dateRange = request('dateRange', '')) {
+                if(!empty($dateRange[0]) && !empty($dateRange[1])){
+                    $fromDate = (new Carbon($dateRange[0]))->format('Y-m-d H:i:s');
+                    $toDate = (new Carbon($dateRange[1]))->format('Y-m-d H:i:s');
+                }
+                $orders = $orders->whereBetween('created_at', [$fromDate,$toDate]);
+            }
+
+            return responder()->success($orders, OrderTransformer::class)->respond(200);
+        } catch (\Exception $e) {
+            return responder()->error($e->getMessage() . ' ' . $e->getFile() . ' ' . $e->getLine())->respond();
+        }
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function myOrders()
+    {
+        try {
+
+            $orders = new Order;
+            if ($search = request('search', '')) {
+                $orders = $orders->where(function ($query) use ($search) {
+                    $query->where('title', 'like', "%$search%")->orWhere('content', 'like', "%$search%");
+                });
+                //$products=$products->where('title', 'like', "%$search%")->orWhere('content', 'like', "%$search%");
+            }
+            if ($status = request('status', '')) {
+                $orders = $orders->where('status', $status);
+            }
+            if ($dateRange = request('dateRange', '')) {
+                if(!empty($dateRange[0]) && !empty($dateRange[1])){
+                    $fromDate = (new Carbon($dateRange[0]))->format('Y-m-d H:i:s');
+                    $toDate = (new Carbon($dateRange[1]))->format('Y-m-d H:i:s');
+                }
+                $orders = $orders->whereBetween('created_at', [$fromDate,$toDate]);
+            }
+
+            return responder()->success($orders, OrderTransformer::class)->respond(200);
+        } catch (\Exception $e) {
+            return responder()->error($e->getMessage() . ' ' . $e->getFile() . ' ' . $e->getLine())->respond();
+        }
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\Models\Order  $order
+     * @return \Illuminate\Http\Response
+     */
+    public function myOrderView(Order $order)
+    {
+        try {
+            return responder()->success($order, OrderTransformer::class)->respond(200);
+        } catch (\Exception $e) {
+            return responder()->error($e->getMessage())->respond();
+        }
     }
 
     /**

@@ -28,8 +28,8 @@
                                 </tr>
                             </thead>
                             <GlobalTransition>
-                            <tbody v-if="orders.length">
-                                
+                                <tbody v-if="orders.length">
+
                                     <tr v-for="(order, index) in orders" :key="index" class="bg-white border-b">
                                         <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
                                             {{ order.buyer_name }}
@@ -45,19 +45,17 @@
                                         </td>
                                         <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
                                             <div class="flex gap-1">
-                                                <button type="button" @click="confirmDelete(order.id)"
-                                                    class="px-3 py-1 bg-red-500 block w-fit rounded-sm text-white">Delete</button>
-                                                <button type="button"
-                                                    @click="$router.push('/admin/order/' + order.id)"
-                                                    class="px-3 py-1 bg-green-500 block w-fit rounded-sm text-white">Edit</button>
+
+                                                <button type="button" @click="$router.push('/admin/my-order/' + order.id)"
+                                                    class="px-3 py-1 bg-blue-500 block w-fit rounded-sm text-white">View</button>
                                             </div>
                                         </td>
                                     </tr>
-                                
 
 
-                            </tbody>
-                        </GlobalTransition>
+
+                                </tbody>
+                            </GlobalTransition>
                         </table>
                     </div>
                 </div>
@@ -70,25 +68,23 @@
 <script setup>
 import { ref, onMounted, reactive } from 'vue'
 import { createToaster } from "@meforma/vue-toaster"
-import { createConfirmDialog } from 'vuejs-confirm-dialog'
+
+
 
 import helpers from '../../compositions/helpers'
-import ConfirmDialog from '../../components/ConfirmDialog.vue'
-import GlobalTransition from '../../Transitions/GlobalTransition.vue'
 import OrdersFilter from '../components/OrdersFilter.vue'
+import GlobalTransition from '../../Transitions/GlobalTransition.vue'
 
 const toaster = createToaster({ position: "top" });
-const dialog = createConfirmDialog(ConfirmDialog, { msg: 'Do you wnat to remove this item?' })
 const orders = ref([])
 
-
-
-
-
-
+onMounted(() => {
+    //populateOrders();
+})
 
 const populateOrders = async (filters) => {
-    axios.get('/api/admin/order', { params: filters })
+    console.log(filters)
+    axios.get('/api/admin/my-orders', { params: filters })
         .then(res => {
             if (res.data.success) {
                 console.log(res.data.data);
@@ -103,26 +99,7 @@ const populateOrders = async (filters) => {
         });
 }
 
-const confirmDelete = async (id) => {
-    const { data, isCanceled } = await dialog.reveal()
-    if (isCanceled) return
-    deleteProduct(id)
-}
 
-const deleteProduct = (id) => {
-    axios.delete('/api/admin/product/' + id)
-        .then(response => {
-            if (response.data.success) {
-                products.value = response.data.data
-                toaster.success(`Product deleted`);
-            } else {
-                toaster.error(`Error`);
-            }
-        })
-        .catch(function (error) {
-            toaster.error(error);
-        });
-}
 </script>
 
 <style scoped></style>
