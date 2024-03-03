@@ -15,7 +15,7 @@ export default {
     },
     mutations: {
         SET_AUTHENTICATED(state, value) {
-            state.authenticated = true
+            state.authenticated = value
         },
         SET_USER(state, value) {
             state.user = value
@@ -40,6 +40,10 @@ export default {
             commit('SET_USER', {})
             commit('SET_AUTHENTICATED', false)
             window.location.href = "/login"
+        },
+        clearStorage({ commit }) {
+            commit('SET_USER', {})
+            commit('SET_AUTHENTICATED', false)
         }
     }
 }

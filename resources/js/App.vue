@@ -1,5 +1,4 @@
 <template>
-
     <div class="block lg:flex" v-if="(isLoggedIn && !route.meta.isPublicPage)">
         <SidebarMenu />
         <router-view></router-view>
@@ -7,7 +6,6 @@
     <div v-else>
         <router-view></router-view>
     </div>
-
 </template>
 
 
@@ -28,6 +26,7 @@ const route = useRoute()
 
 
 const user = computed(() => store.getters['auth/user'])
+const authenticated = computed(() => store.getters['auth/authenticated'])
 
 
 
@@ -35,9 +34,9 @@ const user = computed(() => store.getters['auth/user'])
 
 
 const isPublicPage = computed
-(() => {
-    return route.meta.isPublicPage
-})
+    (() => {
+        return route.meta.isPublicPage
+    })
 
 //console.log(user.value,isLoggedIn);
 
@@ -49,13 +48,16 @@ let isLoggedIn = ref(false)
 onMounted(() => {
     if (window.Laravel.isLoggedin) {
         isLoggedIn.value = true
+    } else if(user || authenticated){
+        store.dispatch('auth/clearStorage')
+
     }
     //const route = useRoute()
-    setTimeout(()=>{
+    setTimeout(() => {
         console.log(route.meta.isPublicPage);
-    },30)
-    
-    
+    }, 30)
+
+
 
 })
 
