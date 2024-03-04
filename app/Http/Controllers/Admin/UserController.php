@@ -73,6 +73,50 @@ class UserController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
+     * @return \Illuminate\Http\Response
+     */
+    public function editAccount()
+    {
+        return responder()->success(Auth()->user(), UserTransformer::class)->respond(200);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \App\Http\Requests\UpdateUserRequest  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function updateAccount(UpdateUserRequest $request, User $user)
+    {
+
+        $currentUser = auth()->user();
+
+        if ($currentUser == $user) {
+            return new Exception('unauthorized', 403);
+        }
+
+        $validated = $request->validated();
+        if (!empty($validated['password'])) {
+            $validated['password'] = bcrypt($validated['password']);
+        }
+
+        if ($user->update($validated)) {
+            $user->syncRoles([$validated['role']]);
+            $photo = request()->file('photo');
+            if (isset($photo) && !empty($photo) && $photo->isValid()) {
+                $user->addMedia($photo)
+                    ->toMediaCollection('user-photos');
+            } elseif (request('clearFiles')) {
+                $user->clearMediaCollection('user-photos');
+            }
+            return responder()->success()->respond(200);
+        }
+        return responder()->error()->respond();
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
      * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */

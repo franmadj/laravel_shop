@@ -25,8 +25,8 @@ const User = () =>
     import ('../Admin/Pages/User.vue')
 const UserEdit = () =>
     import ('../Admin/Pages/UserEdit.vue')
-const Account = () =>
-    import ('../Admin/Pages/Account.vue')
+const UserAccountEdit = () =>
+    import ('../Admin/Pages/UserAccountEdit.vue')
 const Login = () =>
     import ('../Auth/Pages/Login.vue')
 const Register = () =>
@@ -186,7 +186,7 @@ export const routes = [{
     },
     {
         path: '/admin/account',
-        component: Account,
+        component: UserAccountEdit,
         meta: {
             requiresAuth: true
         }

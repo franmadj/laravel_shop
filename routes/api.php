@@ -70,6 +70,10 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::get('/', [AdminOrderController::class, 'myOrders']);
             Route::get('/{order}', [AdminOrderController::class, 'myOrderView']);
         });
+        Route::prefix('account')->group(function () {
+            Route::get('/', [UserController::class, 'editAccount']);
+            Route::put('/{user}', [UserController::class, 'updateAccount']);
+        });
 
         Route::middleware('role:admin')->group(function () {
 
