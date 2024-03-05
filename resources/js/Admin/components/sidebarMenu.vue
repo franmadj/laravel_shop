@@ -179,13 +179,13 @@
     </sidebar>
 </template>
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useStore } from 'vuex'
 
 const store = useStore()
 let toggleMenu = ref(true)
 
-const isAdmin = ref(store.getters['auth/user'].isAdmin)
+const isAdmin = computed(() => store.getters['auth/user'].isAdmin)
 
 onMounted(() => {
 

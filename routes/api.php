@@ -75,6 +75,10 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::put('/{user}', [UserController::class, 'updateAccount']);
         });
 
+        Route::get('/user-statistics', [UserController::class, 'adminStatistics']);
+        Route::get('/order-statistics', [AdminOrderController::class, 'adminStatistics']);
+        Route::get('/my-order-statistics', [AdminOrderController::class, 'adminMyOrderStatistics']);
+
         Route::middleware('role:admin')->group(function () {
 
             Route::prefix('user')->group(function () {
@@ -83,6 +87,7 @@ Route::middleware('auth:sanctum')->group(function () {
                 Route::get('/{user}', [UserController::class, 'edit']);
                 Route::put('/{user}', [UserController::class, 'update']);
                 Route::delete('/{user}', [UserController::class, 'destroy']);
+                //Route::get('/count', [UserController::class, 'count']);
             });
 
             Route::prefix('product')->group(function () {

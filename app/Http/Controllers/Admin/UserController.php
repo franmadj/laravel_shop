@@ -7,11 +7,35 @@ use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
 use App\Transformers\UserTransformer;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
+
+    public function adminStatistics()
+    {
+        try {
+            $usersCount = User::with('roles')->get()->filter(
+                fn($user) => $user->roles->where('name', 'user')->toArray()
+            );
+
+            $newUsersCount = $usersCount->filter(
+                fn($user) => $user->whereId($user->id)->where('created_at', '>', Carbon::now()->subWeek())->count()
+            );
+
+            $data = [
+                'usersCount' => $usersCount->count(),
+                'newUsersCount' => $newUsersCount->count(),
+            ];
+            return responder()->success($data)->respond(200);
+        } catch (Exception $e) {
+            return responder()->error($e->getMessage())->respond();
+
+        }
+
+    }
 
     public function index()
     {

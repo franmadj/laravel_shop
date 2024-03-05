@@ -12,6 +12,39 @@ use Carbon\Carbon;
 
 class OrderController extends Controller
 {
+
+    public function adminStatistics()
+    {
+        try {
+            $ordersCount = Order::all();
+            $newOrdersCount = $ordersCount->filter(
+                fn($order) => $order->whereId($order->id)->where('created_at', '>', Carbon::now()->subWeek())->count()
+            );
+            $data = [
+                'ordersCount' => $ordersCount->count(),
+                'newOrdersCount' => $newOrdersCount->count(),
+            ];
+            return responder()->success($data)->respond(200);
+        } catch (\Exception $e) {
+            return responder()->error($e->getMessage())->respond();
+
+        }
+    }
+
+    public function adminMyOrderStatistics()
+    {
+        try {
+            $ordersCount = Auth()->user()->orders;
+            
+            $data = [
+                'ordersCount' => $ordersCount->count(),
+            ];
+            return responder()->success($data)->respond(200);
+        } catch (\Exception $e) {
+            return responder()->error($e->getMessage())->respond();
+
+        }
+    }
     /**
      * Display a listing of the resource.
      *
