@@ -62,9 +62,9 @@
 
 
 
-            <div class=" flex items-center gap-2 flex-wrap justify-around">
+            <div class=" flex items-center gap-3 mx-auto flex-wrap justify-center">
                 <GlobalGroupTransition>
-                    <ProductItem class="w-full md:w-1/3 xl:w-1/4 p-6 flex flex-col shadow mb-7" v-for="product of products" :key="product.id" :product="product" :authenticated="authenticated" />
+                    <ProductItem class="w-full md:w-1/3 xl:w-1/4 p-6 flex flex-col shadow-xl mb-7" v-for="product of products" :key="product.id" :product="product" :authenticated="authenticated" />
                 </GlobalGroupTransition>
             </div>
         </div>

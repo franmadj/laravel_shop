@@ -10,7 +10,7 @@
 
         </div>
         <router-link :to="'/shop/' + props.product.slug" class="w-full">
-            <img class="hover:grow hover:shadow-lg mx-auto md:h-44 lg:h-80 xl:h-[400px] object-cover w-full" :src="mainImage">
+            <img class="hover:grow hover:shadow-lg mx-auto md:h-80 xl:h-[400px] object-cover w-full rounded" :src="mainImage">
 
             <div class="pt-3 flex items-center justify-between">
                 <p class="">{{ props.product.title }}</p>
