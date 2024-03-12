@@ -30,6 +30,9 @@
     </script>
 @endif
         <div id="app"></div>
+        <script
+            type="text/javascript"
+            src="../node_modules/tw-elements/dist/js/tw-elements.umd.min.js"></script>
     </body>
     <script src="{{ mix('/js/app.js') }}"></script>
 </html>
