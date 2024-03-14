@@ -3,6 +3,7 @@ import App from './App.vue'
 import router from './router'
 import Toaster from '@meforma/vue-toaster';
 import * as ConfirmDialog from 'vuejs-confirm-dialog'
+import { vfmPlugin } from 'vue-final-modal'
 import store from './store'
 
 
@@ -43,7 +44,7 @@ app.directive('click-outside', {
 app.use(router)
 app.use(Toaster)
 app.use(ConfirmDialog)
-
+app.use(vfmPlugin)
 app.use(store)
 
 

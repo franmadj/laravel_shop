@@ -13,6 +13,7 @@
         "autoprefixer": "^10.4.7",
         "laravel-mix": "^6.0.6",
         "postcss": "^8.4.14",
+        "postcss-loader": "^8.1.1",
         "vue-template-compiler": "^2.7.8"
     },
     "dependencies": {
@@ -26,6 +27,7 @@
         "tw-elements": "^2.0.0",
         "v-click-outside": "^3.2.0",
         "vue": "^3.4.21",
+        "vue-final-modal": "^3.4.11",
         "vue-loader": "^16.8.3",
         "vue-router": "^4.1.2",
         "vuejs-confirm-dialog": "^0.4.3",

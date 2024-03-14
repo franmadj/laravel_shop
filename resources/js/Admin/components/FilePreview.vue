@@ -18,7 +18,7 @@ defineProps({
 defineEmits(['remove'])
 </script>
 
-<style scoped lang="stylus">
+<style scoped lang="postcss">
 .file-preview {
 	width: 20%;
 	margin: 1rem 2.5%;
