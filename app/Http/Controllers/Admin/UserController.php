@@ -9,7 +9,6 @@ use App\Models\User;
 use App\Transformers\UserTransformer;
 use Carbon\Carbon;
 use Exception;
-use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
@@ -79,17 +78,21 @@ class UserController extends Controller
      */
     public function store(StoreUserRequest $request)
     {
-        $validated = $request->validated();
-        $validated['password'] = bcrypt($validated['password']);
-        if ($user = User::create($validated)) {
-            $user->assignRole($validated['role']);
-            $photo = request()->file('photo');
-            if (isset($photo) && !empty($photo) && $photo->isValid()) {
-                $user->addMedia($photo)
-                    ->toMediaCollection('user-photos');
-            }
-            return responder()->success(['id' => $user->id])->respond(201);
+        try {
+            $validated = $request->validated();
+            $validated['password'] = bcrypt($validated['password']);
+            if ($user = User::create($validated)) {
+                $user->assignRole($validated['role']);
+                $photo = request()->file('photo');
+                if (isset($photo) && !empty($photo) && $photo->isValid()) {
+                    $user->addMedia($photo)
+                        ->toMediaCollection('user-photos');
+                }
+                return responder()->success(['id' => $user->id])->respond(201);
 
+            }
+        } catch (\Exception $e) {
+            return responder()->error($e->getMessage())->respond();
         }
 
     }
@@ -101,7 +104,11 @@ class UserController extends Controller
      */
     public function editAccount()
     {
-        return responder()->success(Auth()->user(), UserTransformer::class)->respond(200);
+        try {
+            return responder()->success(Auth()->user(), UserTransformer::class)->respond(200);
+        } catch (\Exception $e) {
+            return responder()->error($e->getMessage())->respond();
+        }
     }
 
     /**
@@ -112,30 +119,34 @@ class UserController extends Controller
      */
     public function updateAccount(UpdateUserRequest $request, User $user)
     {
+        try {
 
-        $currentUser = auth()->user();
+            $currentUser = auth()->user();
 
-        if ($currentUser == $user) {
-            return new Exception('unauthorized', 403);
-        }
-
-        $validated = $request->validated();
-        if (!empty($validated['password'])) {
-            $validated['password'] = bcrypt($validated['password']);
-        }
-
-        if ($user->update($validated)) {
-            $user->syncRoles([$validated['role']]);
-            $photo = request()->file('photo');
-            if (isset($photo) && !empty($photo) && $photo->isValid()) {
-                $user->addMedia($photo)
-                    ->toMediaCollection('user-photos');
-            } elseif (request('clearFiles')) {
-                $user->clearMediaCollection('user-photos');
+            if ($currentUser == $user) {
+                return new Exception('unauthorized', 403);
             }
-            return responder()->success()->respond(200);
+
+            $validated = $request->validated();
+            if (!empty($validated['password'])) {
+                $validated['password'] = bcrypt($validated['password']);
+            }
+
+            if ($user->update($validated)) {
+                $user->syncRoles([$validated['role']]);
+                $photo = request()->file('photo');
+                if (isset($photo) && !empty($photo) && $photo->isValid()) {
+                    $user->addMedia($photo)
+                        ->toMediaCollection('user-photos');
+                } elseif (request('clearFiles')) {
+                    $user->clearMediaCollection('user-photos');
+                }
+                return responder()->success()->respond(200);
+            }
+            return responder()->error('Unable to update account')->respond();
+        } catch (\Exception $e) {
+            return responder()->error($e->getMessage())->respond();
         }
-        return responder()->error()->respond();
     }
 
     /**
@@ -146,7 +157,11 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        return responder()->success($user, UserTransformer::class)->respond(200);
+        try {
+            return responder()->success($user, UserTransformer::class)->respond(200);
+        } catch (\Exception $e) {
+            return responder()->error($e->getMessage())->respond();
+        }
     }
 
     /**
@@ -158,23 +173,27 @@ class UserController extends Controller
      */
     public function update(UpdateUserRequest $request, User $user)
     {
-        $validated = $request->validated();
-        if (!empty($validated['password'])) {
-            $validated['password'] = bcrypt($validated['password']);
-        }
-
-        if ($user->update($validated)) {
-            $user->syncRoles([$validated['role']]);
-            $photo = request()->file('photo');
-            if (isset($photo) && !empty($photo) && $photo->isValid()) {
-                $user->addMedia($photo)
-                    ->toMediaCollection('user-photos');
-            } elseif (request('clearFiles')) {
-                $user->clearMediaCollection('user-photos');
+        try {
+            $validated = $request->validated();
+            if (!empty($validated['password'])) {
+                $validated['password'] = bcrypt($validated['password']);
             }
-            return responder()->success()->respond(200);
+
+            if ($user->update($validated)) {
+                $user->syncRoles([$validated['role']]);
+                $photo = request()->file('photo');
+                if (isset($photo) && !empty($photo) && $photo->isValid()) {
+                    $user->addMedia($photo)
+                        ->toMediaCollection('user-photos');
+                } elseif (request('clearFiles')) {
+                    $user->clearMediaCollection('user-photos');
+                }
+                return responder()->success()->respond(200);
+            }
+            return responder()->error('Unable to update user')->respond();
+        } catch (\Exception $e) {
+            return responder()->error($e->getMessage())->respond();
         }
-        return responder()->error()->respond();
     }
 
     /**
@@ -185,7 +204,11 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        $user->delete();
-        return responder()->success(User::all(), UserTransformer::class)->respond(200);
+        try {
+            $user->delete();
+            return responder()->success(User::all(), UserTransformer::class)->respond(200);
+        } catch (\Exception $e) {
+            return responder()->error($e->getMessage())->respond();
+        }
     }
 }

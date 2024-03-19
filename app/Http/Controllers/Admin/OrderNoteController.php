@@ -38,10 +38,14 @@ class OrderNoteController extends Controller
      */
     public function store(StoreOrderNoteRequest $request)
     {
-        $validated = $request->validated();
-        $validated = $validated + ['user_id' => Auth()->user()->id];
-        OrderNote::create($validated);
-        return responder()->success()->respond(200);
+        try {
+            $validated = $request->validated();
+            $validated = $validated + ['user_id' => Auth()->user()->id];
+            OrderNote::create($validated);
+            return responder()->success()->respond(200);
+        } catch (\Exception $e) {
+            return responder()->error($e->getMessage())->respond();
+        }
     }
 
     /**
@@ -86,8 +90,12 @@ class OrderNoteController extends Controller
      */
     public function destroy($orderNote)
     {
-        $orderNote = OrderNote::findOrFail($orderNote);
-        $orderNote->delete();
-        return responder()->success()->respond(200);
+        try {
+            $orderNote = OrderNote::findOrFail($orderNote);
+            $orderNote->delete();
+            return responder()->success()->respond(200);
+        } catch (\Exception $e) {
+            return responder()->error($e->getMessage())->respond();
+        }
     }
 }

@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\Attribute;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreAttributeRequest;
 use App\Http\Requests\UpdateAttributeRequest;
+use App\Models\Attribute;
 use App\Transformers\AttributeTransformer;
-use App\Http\Controllers\Controller;
 
 class AttributeController extends Controller
 {
@@ -18,7 +18,11 @@ class AttributeController extends Controller
      */
     public function index()
     {
-        return responder()->success(Attribute::all(), AttributeTransformer::class)->respond(201);
+        try {
+            return responder()->success(Attribute::all(), AttributeTransformer::class)->respond(201);
+        } catch (\Exception $e) {
+            return responder()->error($e->getMessage())->respond();
+        }
     }
 
     /**
@@ -39,11 +43,15 @@ class AttributeController extends Controller
      */
     public function store(StoreAttributeRequest $request)
     {
-        $validated = $request->validated();
-        if (Attribute::create($validated)) {
-            return responder()->success(Attribute::all(), AttributeTransformer::class)->respond(201);
+        try {
+            $validated = $request->validated();
+            if (Attribute::create($validated)) {
+                return responder()->success(Attribute::all(), AttributeTransformer::class)->respond(201);
+            }
+            return responder()->error()->respond();
+        } catch (\Exception $e) {
+            return responder()->error($e->getMessage())->respond();
         }
-        return responder()->error()->respond();
     }
 
     /**
@@ -65,7 +73,11 @@ class AttributeController extends Controller
      */
     public function edit(Attribute $attribute)
     {
-        return responder()->success($attribute, AttributeTransformer::class)->respond(201);
+        try {
+            return responder()->success($attribute, AttributeTransformer::class)->respond(201);
+        } catch (\Exception $e) {
+            return responder()->error($e->getMessage())->respond();
+        }
     }
 
     /**
@@ -77,12 +89,16 @@ class AttributeController extends Controller
      */
     public function update(UpdateAttributeRequest $request, Attribute $attribute)
     {
-        $validated = $request->validated();
-        if ($attribute->update($validated)) {
-            
-            return responder()->success(Attribute::all(), AttributeTransformer::class)->respond(201);
+        try {
+            $validated = $request->validated();
+            if ($attribute->update($validated)) {
+
+                return responder()->success(Attribute::all(), AttributeTransformer::class)->respond(201);
+            }
+            return responder()->error()->respond();
+        } catch (\Exception $e) {
+            return responder()->error($e->getMessage())->respond();
         }
-        return responder()->error()->respond();
     }
 
     /**
@@ -93,7 +109,11 @@ class AttributeController extends Controller
      */
     public function destroy(Attribute $attribute)
     {
-        $attribute->delete();
-        return responder()->success(Attribute::all(), AttributeTransformer::class)->respond(201);
+        try {
+            $attribute->delete();
+            return responder()->success(Attribute::all(), AttributeTransformer::class)->respond(201);
+        } catch (\Exception $e) {
+            return responder()->error($e->getMessage())->respond();
+        }
     }
 }

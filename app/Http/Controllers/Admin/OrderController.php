@@ -35,7 +35,7 @@ class OrderController extends Controller
     {
         try {
             $ordersCount = Auth()->user()->orders;
-            
+
             $data = [
                 'ordersCount' => $ordersCount->count(),
             ];
@@ -65,11 +65,11 @@ class OrderController extends Controller
                 $orders = $orders->where('status', $status);
             }
             if ($dateRange = request('dateRange', '')) {
-                if(!empty($dateRange[0]) && !empty($dateRange[1])){
+                if (!empty($dateRange[0]) && !empty($dateRange[1])) {
                     $fromDate = (new Carbon($dateRange[0]))->format('Y-m-d H:i:s');
                     $toDate = (new Carbon($dateRange[1]))->format('Y-m-d H:i:s');
                 }
-                $orders = $orders->whereBetween('created_at', [$fromDate,$toDate]);
+                $orders = $orders->whereBetween('created_at', [$fromDate, $toDate]);
             }
 
             return responder()->success($orders, OrderTransformer::class)->respond(200);
@@ -98,11 +98,11 @@ class OrderController extends Controller
                 $orders = $orders->where('status', $status);
             }
             if ($dateRange = request('dateRange', '')) {
-                if(!empty($dateRange[0]) && !empty($dateRange[1])){
+                if (!empty($dateRange[0]) && !empty($dateRange[1])) {
                     $fromDate = (new Carbon($dateRange[0]))->format('Y-m-d H:i:s');
                     $toDate = (new Carbon($dateRange[1]))->format('Y-m-d H:i:s');
                 }
-                $orders = $orders->whereBetween('created_at', [$fromDate,$toDate]);
+                $orders = $orders->whereBetween('created_at', [$fromDate, $toDate]);
             }
 
             return responder()->success($orders, OrderTransformer::class)->respond(200);
@@ -186,19 +186,17 @@ class OrderController extends Controller
      */
     public function update(UpdateOrderRequest $request, Order $order)
     {
-        // try {
+        try {
+            $validated = $request->validated();
+            $order->buyer_details = $validated['buyer_details'];
+            $order->status = $validated['status'];
+            $order->save();
 
-        $validated = $request->validated();
+            return responder()->success($order)->respond(200);
 
-        $order->buyer_details = $validated['buyer_details'];
-        $order->status = $validated['status'];
-        $order->save();
-
-        return responder()->success($order)->respond(200);
-
-        //} catch (\Exception $e) {
-        return responder()->error($e->getMessage())->respond();
-        //}
+        } catch (\Exception $e) {
+            return responder()->error($e->getMessage())->respond();
+        }
     }
 
     /**

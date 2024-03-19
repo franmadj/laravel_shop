@@ -15,21 +15,24 @@ class AttributeItemVariationController extends Controller
      */
     public function index()
     {
-        $attr = request('attr', false);
-        $product = request('product', false);
+        try {
+            $attr = request('attr', false);
+            $product = request('product', false);
 
-        //dd($attr,$product, request('variations', false));
-        if ($attr && $product) {
-            $items = AttributeItemVariation::where('attribute_id', $attr)->where('product_id', $product);
-            if ($variations = request('variations', false)) {
-                $items = $items->whereIn('variation_id', $variations);
+            //dd($attr,$product, request('variations', false));
+            if ($attr && $product) {
+                $items = AttributeItemVariation::where('attribute_id', $attr)->where('product_id', $product);
+                if ($variations = request('variations', false)) {
+                    $items = $items->whereIn('variation_id', $variations);
+                }
+                return responder()->success($items->get())->respond(200);
+
             }
-            return responder()->success($items->get())->respond(200);
-
+            return responder()->error()->respond();
+        } catch (\Exception $e) {
+            return responder()->error($e->getMessage())->respond();
         }
-        return responder()->error()->respond();
 
-        
     }
 
     /**

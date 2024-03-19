@@ -18,7 +18,6 @@ class ProductController extends Controller
         try {
             // $with = ['postable.user', 'likes'];
             $product = $product->like(auth()->user()->id);
-
             return responder()->success($product, new ProductTransformer())->respond();
         } catch (\Exception $e) {
             return responder()->error($e->getMessage());
@@ -32,29 +31,31 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = new Product;
-        if ($search = request('search', '')) {
-            $products = $products->where(function ($query) use ($search) {
-                $query->where('title', 'like', "%$search%")->orWhere('content', 'like', "%$search%");
-            });
-            //$products=$products->where('title', 'like', "%$search%")->orWhere('content', 'like', "%$search%");
-        }
-        if ($status = request('status', '')) {
-            $products = $products->where('status', $status);
-        }
-        if ($type = request('type', '')) {
-            $products = $products->where('type', $type);
-        }
-        if ($category = request('category', '')) {
-            $products = $products->whereHas('categories', function ($query) use ($category) {
-                $query->where('categories.id', $category);
 
-            });
+        try {
+            $products = new Product;
+            if ($search = request('search', '')) {
+                $products = $products->where(function ($query) use ($search) {
+                    $query->where('title', 'like', "%$search%")->orWhere('content', 'like', "%$search%");
+                });
+            }
+            if ($status = request('status', '')) {
+                $products = $products->where('status', $status);
+            }
+            if ($type = request('type', '')) {
+                $products = $products->where('type', $type);
+            }
+            if ($category = request('category', '')) {
+                $products = $products->whereHas('categories', function ($query) use ($category) {
+                    $query->where('categories.id', $category);
+
+                });
+            }
+
+            return responder()->success($products->get(), ProductTransformer::class)->respond(200);
+        } catch (\Exception $e) {
+            return responder()->error($e->getMessage())->respond();
         }
-
-        //dd($products->toSql());
-
-        return responder()->success($products->get(), ProductTransformer::class)->respond(200);
     }
 
     /**
@@ -75,121 +76,127 @@ class ProductController extends Controller
      */
     public function store(StoreProductRequest $request)
     {
-        $validated = $request->validated();
-        $validated['in_stock'] = $request->stock_status == 'in_stock';
-        //dd($validated);
-        if ($product = Product::create($validated)) {
-            $files = request('files', []);
-            if (!empty($files) && is_array($files)) {
-                foreach ($files as $file) {
-                    if (isset($file) && !empty($file) && $file->isValid()) {
-                        $product
-                            ->addMedia($file)
-                            ->usingName('image')
-                            ->toMediaCollection();
+        try {
+            $validated = $request->validated();
+            $validated['in_stock'] = $request->stock_status == 'in_stock';
+            if ($product = Product::create($validated)) {
+                $files = request('files', []);
+                if (!empty($files) && is_array($files)) {
+                    foreach ($files as $file) {
+                        if (isset($file) && !empty($file) && $file->isValid()) {
+                            $product
+                                ->addMedia($file)
+                                ->usingName('image')
+                                ->toMediaCollection();
+                        }
+
                     }
-
                 }
-            }
 
-            $gallery = request('gallery', []);
-            if (!empty($gallery) && is_array($gallery)) {
-                $product->clearMediaCollection('gallery');
-                foreach ($gallery as $image) {
-                    if (isset($image) && !empty($image) && $image->isValid()) {
-                        $product
-                            ->addMedia($image)
-                            ->usingName('gallery_image')
-                            ->toMediaCollection('gallery');
+                $gallery = request('gallery', []);
+                if (!empty($gallery) && is_array($gallery)) {
+                    $product->clearMediaCollection('gallery');
+                    foreach ($gallery as $image) {
+                        if (isset($image) && !empty($image) && $image->isValid()) {
+                            $product
+                                ->addMedia($image)
+                                ->usingName('gallery_image')
+                                ->toMediaCollection('gallery');
+                        }
+
                     }
-
                 }
-            }
 
-            if ($request->has('categories') and is_array($request->categories)) {
-                $product->categories()->attach(collect($request->categories));
+                if ($request->has('categories') and is_array($request->categories)) {
+                    $product->categories()->attach(collect($request->categories));
+                }
+                return responder()->success(['id' => $product->id])->respond(201);
             }
-            return responder()->success(['id' => $product->id])->respond(201);
+        } catch (\Exception $e) {
+            return responder()->error($e->getMessage())->respond();
         }
-        return responder()->error()->respond();
 
     }
 
     public function variations(Product $product)
     {
         //dd(request()->all());
-        $variations = request('variations', '');
+        try {
+            $variations = request('variations', '');
 
-        $prodVariations = json_decode($product->variations);
-
-        if (
-            $prodVariations &&
-            !empty($variations['attrs']) &&
-            is_array($variations['attrs']) &&
-            !empty($prodVariations->attrs) &&
-            is_array($prodVariations->attrs)) {
+            $prodVariations = json_decode($product->variations);
 
             if (
-                count($variations['attrs']) != count($prodVariations->attrs) ||
-                count(array_intersect($variations['attrs'], $prodVariations->attrs)) != count($prodVariations->attrs)) {
-                $product->variations()->delete();
+                $prodVariations &&
+                !empty($variations['attrs']) &&
+                is_array($variations['attrs']) &&
+                !empty($prodVariations->attrs) &&
+                is_array($prodVariations->attrs)) {
 
+                if (
+                    count($variations['attrs']) != count($prodVariations->attrs) ||
+                    count(array_intersect($variations['attrs'], $prodVariations->attrs)) != count($prodVariations->attrs)) {
+                    $product->variations()->delete();
+
+                }
             }
-        }
 
-        if (!empty($variations['possibilities']) && is_array($variations['possibilities'])) {
+            if (!empty($variations['possibilities']) && is_array($variations['possibilities'])) {
 
-            foreach ($variations['possibilities'] as &$variation) {
+                foreach ($variations['possibilities'] as &$variation) {
 
-                //$data=array_only($variation['data'],)
-                if (!empty($variation['data']['stock_status'])) {
-                    $variation['data']['in_stock'] = $variation['data']['stock_status'] == 'in_stock';
-                }
-
-                if (empty($variation['data']['price'])) {
-                    $variation['data']['price'] = $product->price;
-                } else {
-                    $variation['data']['price'] = floatval($variation['data']['price']);
-                }
-                if (!empty($variation['data']['sale_price'])) {
-                    $variation['data']['sale_price'] = floatval($variation['data']['sale_price']);
-                }
-
-                $variation['open'] = false;
-
-                if (empty($variation['id'])) {
-                    if ($variation['added'] && !empty($variation['items']) && is_array($variation['items']) && !empty($variation['items'][0]['id'])) {
-
-                        $newVariation = $product->variations()->create(Arr::except($variation['data'], ['stock_status']));
-                        $variation['id'] = $newVariation->id;
-                        //$attrItems = collect($variation['items'])->pluck('id');
-                        collect($variation['items'])->each(function ($item) use ($newVariation, $product) {
-                            $newVariation->AttributeItems()->attach($item['id'], ['product_id' => $product->id, 'attribute_id' => $item['attributeId']]);
-
-                        });
-
+                    //$data=array_only($variation['data'],)
+                    if (!empty($variation['data']['stock_status'])) {
+                        $variation['data']['in_stock'] = $variation['data']['stock_status'] == 'in_stock';
                     }
 
-                } elseif (!empty($variation['updated']) && 'save' == $variation['action']) {
+                    if (empty($variation['data']['price'])) {
+                        $variation['data']['price'] = $product->price;
+                    } else {
+                        $variation['data']['price'] = floatval($variation['data']['price']);
+                    }
+                    if (!empty($variation['data']['sale_price'])) {
+                        $variation['data']['sale_price'] = floatval($variation['data']['sale_price']);
+                    }
 
-                    $product->variations()->where('id', $variation['id'])->update(Arr::except($variation['data'], ['stock_status']));
-                    $variation['updated'] = false;
-                    $variation['action'] = 'none';
+                    $variation['open'] = false;
 
-                } elseif (!empty($variation['updated']) && 'remove' == $variation['action']) {
-                    $product->variations()->where('id', $variation['id'])->delete();
-                    $variation['updated'] = false;
-                    $variation['action'] = 'none';
+                    if (empty($variation['id'])) {
+                        if ($variation['added'] && !empty($variation['items']) && is_array($variation['items']) && !empty($variation['items'][0]['id'])) {
+
+                            $newVariation = $product->variations()->create(Arr::except($variation['data'], ['stock_status']));
+                            $variation['id'] = $newVariation->id;
+                            //$attrItems = collect($variation['items'])->pluck('id');
+                            collect($variation['items'])->each(function ($item) use ($newVariation, $product) {
+                                $newVariation->AttributeItems()->attach($item['id'], ['product_id' => $product->id, 'attribute_id' => $item['attributeId']]);
+
+                            });
+
+                        }
+
+                    } elseif (!empty($variation['updated']) && 'save' == $variation['action']) {
+
+                        $product->variations()->where('id', $variation['id'])->update(Arr::except($variation['data'], ['stock_status']));
+                        $variation['updated'] = false;
+                        $variation['action'] = 'none';
+
+                    } elseif (!empty($variation['updated']) && 'remove' == $variation['action']) {
+                        $product->variations()->where('id', $variation['id'])->delete();
+                        $variation['updated'] = false;
+                        $variation['action'] = 'none';
+                    }
+
                 }
+                //$update=$product->update(['variations' => json_encode($variations)]);
+                $product->variations = json_encode($variations);
+                $update = $product->save();
 
             }
-            //$update=$product->update(['variations' => json_encode($variations)]);
-            $product->variations = json_encode($variations);
-            $update = $product->save();
 
+            return responder()->success($variations)->respond(201);
+        } catch (\Exception $e) {
+            return responder()->error($e->getMessage())->respond();
         }
-
-        return responder()->success($variations)->respond(201);
 
     }
 
@@ -212,7 +219,11 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        return responder()->success($product, ProductTransformer::class)->respond(200);
+        try {
+            return responder()->success($product, ProductTransformer::class)->respond(200);
+        } catch (\Exception $e) {
+            return responder()->error($e->getMessage())->respond();
+        }
     }
 
     /**

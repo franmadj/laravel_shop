@@ -2,18 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreProductRequest;
-use App\Http\Requests\UpdateProductRequest;
+use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Transformers\ProductTransformer;
-use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
-use App\Http\Controllers\Controller;
 
 class ProductController extends Controller
 {
-
-    
 
     /**
      * Display the specified resource.
@@ -22,9 +16,12 @@ class ProductController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show(Product $product)
-    { 
-        return responder()->success($product, ProductTransformer::class)->respond(200);
+    {
+        try {
+            return responder()->success($product, ProductTransformer::class)->respond(200);
+        } catch (\Exception $e) {
+            return responder()->error($e->getMessage())->respond();
+        }
     }
 
-    
 }

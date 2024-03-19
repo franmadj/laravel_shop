@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreCategoryRequest;
 use App\Http\Requests\UpdateCategoryRequest;
 use App\Models\Category;
 use App\Transformers\CategoryTransformer;
-use App\Http\Controllers\Controller;
 
 class CategoryController extends Controller
 {
@@ -17,7 +17,11 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        return responder()->success(Category::all(), CategoryTransformer::class)->respond(201);
+        try {
+            return responder()->success(Category::all(), CategoryTransformer::class)->respond(201);
+        } catch (\Exception $e) {
+            return responder()->error($e->getMessage())->respond();
+        }
     }
 
     /**
@@ -38,17 +42,21 @@ class CategoryController extends Controller
      */
     public function store(StoreCategoryRequest $request)
     {
-        $validated = $request->validated();
-        if ($category = Category::create($validated)) {
-            $file = request()->file('file');
-            if (isset($file) && !empty($file) && $file->isValid()) {
-                $category->addMedia($file)
-                    ->usingName('image')
-                    ->toMediaCollection();
+        try {
+            $validated = $request->validated();
+            if ($category = Category::create($validated)) {
+                $file = request()->file('file');
+                if (isset($file) && !empty($file) && $file->isValid()) {
+                    $category->addMedia($file)
+                        ->usingName('image')
+                        ->toMediaCollection();
+                }
+                return responder()->success(Category::all(), CategoryTransformer::class)->respond(201);
             }
-            return responder()->success(Category::all(), CategoryTransformer::class)->respond(201);
+            return responder()->error()->respond();
+        } catch (\Exception $e) {
+            return responder()->error($e->getMessage())->respond();
         }
-        return responder()->error()->respond();
     }
 
     /**
@@ -70,7 +78,11 @@ class CategoryController extends Controller
      */
     public function edit(Category $category)
     {
-        return responder()->success($category, CategoryTransformer::class)->respond(201);
+        try {
+            return responder()->success($category, CategoryTransformer::class)->respond(201);
+        } catch (\Exception $e) {
+            return responder()->error($e->getMessage())->respond();
+        }
     }
 
     /**
@@ -82,20 +94,24 @@ class CategoryController extends Controller
      */
     public function update(UpdateCategoryRequest $request, Category $category)
     {
-        $validated = $request->validated();
-        if ($category->update($validated)) {
-            $file = request()->file('file');
-            if (isset($file) && !empty($file) && $file->isValid()) {
-                $category->clearMediaCollection()
-                    ->addMedia($file)
-                    ->usingName('image')
-                    ->toMediaCollection();
-            }elseif (request('clearFiles')) {
-                $category->clearMediaCollection();
+        try {
+            $validated = $request->validated();
+            if ($category->update($validated)) {
+                $file = request()->file('file');
+                if (isset($file) && !empty($file) && $file->isValid()) {
+                    $category->clearMediaCollection()
+                        ->addMedia($file)
+                        ->usingName('image')
+                        ->toMediaCollection();
+                } elseif (request('clearFiles')) {
+                    $category->clearMediaCollection();
+                }
+                return responder()->success(Category::all(), CategoryTransformer::class)->respond(201);
             }
-            return responder()->success(Category::all(), CategoryTransformer::class)->respond(201);
+            return responder()->error()->respond();
+        } catch (\Exception $e) {
+            return responder()->error($e->getMessage())->respond();
         }
-        return responder()->error()->respond();
     }
 
     /**
@@ -106,7 +122,11 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-        $category->delete();
-        return responder()->success(Category::all(), CategoryTransformer::class)->respond(201);
+        try {
+            $category->delete();
+            return responder()->success(Category::all(), CategoryTransformer::class)->respond(201);
+        } catch (\Exception $e) {
+            return responder()->error($e->getMessage())->respond();
+        }
     }
 }
