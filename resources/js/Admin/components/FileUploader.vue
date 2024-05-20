@@ -42,6 +42,8 @@ const props = defineProps({
 let active = ref(false)
 let inActiveTimeout = null
 let limitReached = ref(false)
+let files = reactive([])
+const filesEdit = ref([])
 
 
 
@@ -49,6 +51,7 @@ watch(props.filesDefault, (urls) => {
 	console.log('watch(props.filesDefault');
 	console.log('urls: ', urls);
 	//files = [];
+	files.pop();
 	let list = new DataTransfer();
 	urls.forEach((url, i) => {
 		helpers.getFileFromUrl(url, i + '_name.png')
@@ -116,9 +119,7 @@ onUnmounted(() => {
 
 
 
-let files = reactive([])
 
-const filesEdit = ref([])
 
 
 function addFiles(newFiles) {

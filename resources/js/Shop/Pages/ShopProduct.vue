@@ -14,8 +14,8 @@
                 </router-link>
                 <div class="flex flex-col md:flex-row items-center md:items-start gap-4 flex-wrap justify-center">
                     <GlobalGroupTransition>
-                        <ProductItem class="w-full sm:w-[500px] md:w-[500px] lg:w-[700px]" v-if="product" :product="product"
-                            :authenticated="authenticated" gallery="true" content="true" />
+                        <ProductItem class="w-full sm:w-[500px] md:w-[500px] lg:w-[700px]" v-if="product"
+                            :product="product" :authenticated="authenticated" gallery="true" content="true" />
                     </GlobalGroupTransition>
 
                     <div class="flex flex-col gap-4 w-full lg:w-fit">
@@ -56,7 +56,9 @@ import GlobalGroupTransition from '../../Transitions/GlobalGroupTransition.vue'
 
 
 const store = useStore()
+const carItems = computed(() => store.getters['cart/cartItems'])
 const product = ref(false)
+
 
 let addToCartActive = ref(false)
 let productItem = ref({});
@@ -91,7 +93,7 @@ const addToCart = () => {
         alert('select attributes')
         return;
     }
-    let payload = {
+    const newItem = {
         id: item.id,
         image: item.image,
         title: item.title,
@@ -101,7 +103,13 @@ const addToCart = () => {
         price: item.price,
     }
 
-    store.commit('cart/ADD_CART_ITEMS', payload)
+    const payload = {
+        newItem: newItem,
+        cartItems: carItems
+    }
+    console.log('carItems',carItems);
+
+    store.commit('cart/ADD_CART_ITEMS', payload.newItem)
     //store.dispatch('cart/addCartItem', productItem)
 }
 
@@ -138,6 +146,3 @@ const setProductItem = () => {
 
 }
 </script>
-
-
-

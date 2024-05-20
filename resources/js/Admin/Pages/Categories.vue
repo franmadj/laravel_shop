@@ -120,9 +120,9 @@ const anyFilesUpdate = () => {
 const toaster = createToaster({ position: "top" });
 const dialog = createConfirmDialog(ConfirmDialog)
 const category = ref([])
-let categories = ref([])
-let filesDefault = ref([])
-let editing = ref(false)
+const categories = ref([])
+const filesDefault = ref([])
+const editing = ref(false)
 
 const populateCategories = async () => {
     axios.get('/api/admin/category')
@@ -150,7 +150,7 @@ const store = async () => {
         formData.append('slug', category.value.slug)
         formData.append('description', category.value.description)
         if (category.value.file) {
-            formData.append('file', category.value.file)
+            formData.append('file', category.value.file.file)
         }
         axios.post('/api/admin/category', formData)
             .then(response => {
@@ -179,13 +179,9 @@ const editCategory = (id) => {
             if (response.data.success) {
                 category.value = response.data.data
                 editing.value = response.data.data.id
-                filesDefault.value.length = 0;
+                filesDefault.value.pop();
                 if (response.data.data.image) {
-                    //addFilesEdit(response.data.data.image)
-                    //console.log(filesEdit.value);
-                    const file = helpers.getFileFromUrl(response.data.data.image, 'name.png').then(file => {
-                        filesDefault.value.push(file)
-                    })
+                    filesDefault.value.push(response.data.data.image)
 
 
                 }
@@ -201,7 +197,7 @@ const editCategory = (id) => {
 
 const resetForm = async () => {
     category.value = [];
-    filesDefault.value.length = 0;
+    filesDefault.value.pop();
     editing.value = false;
 }
 
@@ -216,7 +212,7 @@ const updateCategory = async () => {
         formData.append('_method', 'PUT')
 
         if (category.value.file) {
-            formData.append('file', category.value.file)
+            formData.append('file', category.value.file.file)
         } else if (category.value.clearFiles) {
             formData.append('clearFiles', true)
         }
