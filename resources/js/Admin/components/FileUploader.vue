@@ -50,7 +50,6 @@ const filesEdit = ref([])
 watch(props.filesDefault, (urls) => {
 	console.log('watch(props.filesDefault');
 	console.log('urls: ', urls);
-	//files = [];
 	files.pop();
 	let list = new DataTransfer();
 	urls.forEach((url, i) => {
