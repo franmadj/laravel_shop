@@ -20,11 +20,11 @@
                     </div>
 
 
-                    <button class="px-2 py-1 mb-2 bg-blue-700 block w-full rounded-sm text-white" type="submit"
+                    <button class="px-2 py-3 mb-5 mt-2 bg-blue-700 block w-full rounded-sm text-white" type="submit"
                         @click="handleSubmit">Login</button>
 
-                    <router-link class="mt-1 block hover:underline" to="/register">Register</router-link>
-                    <router-link class="mt-0 block hover:underline" to="/forgot-password">Forgot Password</router-link>
+                    <router-link class="mt-1 block text-blue-600 hover:underline mb-2" to="/register">Register</router-link>
+                    <router-link class="mt-0 block text-blue-600 hover:underline" to="/forgot-password">Forgot Password</router-link>
                 </form>
 
             </div>
