@@ -50,7 +50,7 @@ Route::prefix('shop')->group(function () {
     Route::get('products', [ShopController::class, 'products']);
     Route::get('categories', [ShopController::class, 'categories']);
     Route::get('product/{product}', [ControllersProductController::class, 'show']);
-    Route::get('attribute-items', [AttributeItemVariationController::class, 'index']);
+    //Route::get('attribute-items', [AttributeItemVariationController::class, 'index']);
 
 });
 
