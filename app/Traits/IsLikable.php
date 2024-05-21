@@ -4,16 +4,18 @@ namespace App\Traits;
 
 use App\Models\Like;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use ReflectionClass;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 trait IsLikable
 {
-    public function likes()
-    {
+    public function likes():MorphMany
+    { 
         return $this->morphMany(Like::class, 'likable')->orderBy('created_at', 'desc');
     }
 
-    public function scopeWithUserLike($query)
+    public function scopeWithUserLike($query): void
     {
         $query->withCount([
             'likes as user_has_liked' => function (Builder $query) {
@@ -22,7 +24,7 @@ trait IsLikable
         ]);
     }
 
-    public function like($userOrId, $calculateSum = false)
+    public function like(int $userOrId, ?bool $calculateSum = false): Model
     {
         $like = $this->likeExists($userOrId);
         $hasLiked = 0;
@@ -39,7 +41,7 @@ trait IsLikable
 
             if ($calculateSum) {
                 $this->updateLikes(1);
-                $hasLiked =1;
+                $hasLiked = 1;
             }
         }
 
@@ -48,20 +50,23 @@ trait IsLikable
         return $this;
     }
 
-    private function updateLikes(int $value)
+    private function updateLikes(int $value): void
     {
-        $numberOfLikes = $this->likes()->count();
+        $numberOfLikes = $this->likes()->count() + $value;
+        if ($numberOfLikes < 0) {
+            $numberOfLikes = 0;
+        }
 
-        if($this->sociable){
+        if ($this->sociable) {
             $this->sociable->no_of_likes = $numberOfLikes;
             $this->sociable->save();
-        }else{
+        } else {
             $this->no_of_likes = $numberOfLikes;
             $this->save();
         }
     }
 
-    public function likeExists(int $userId)
+    public function likeExists(int $userId): Model
     {
         $reflect = new ReflectionClass($this);
 

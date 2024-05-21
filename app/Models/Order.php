@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Order extends Model
 {
@@ -16,27 +18,52 @@ class Order extends Model
         'cart_items' => 'array',
     ];
 
-    public function products()
+    /**
+     * Get the products of the Model
+     *
+     * @return HasMany
+     */
+    public function products(): HasMany
     {
         return $this->hasMany(OrderItem::class);
     }
 
-    public function user()
+    /**
+     * Get the user of the Model
+     *
+     * @return BelongsTo
+     */
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    public function orderItems()
+    /**
+     * Get the orderItems of the Model
+     *
+     * @return HasMany
+     */
+    public function orderItems(): HasMany
     {
         return $this->hasMany(OrderItem::class);
     }
 
-    public function notes()
+    /**
+     * Get the notes of the Model
+     *
+     * @return HasMany
+     */
+    public function notes(): HasMany
     {
         return $this->hasMany(OrderNote::class);
     }
 
-    public function getBuyerNameAttribute()
+    /**
+     * Get the buyer name of the Model
+     *
+     * @return string
+     */
+    public function getBuyerNameAttribute(): string
     {
         $name = [];
         if (is_array($this->buyer_details)) {
@@ -47,6 +74,6 @@ class Order extends Model
                 $name[] = $this->buyer_details['last_name'];
             }
         }
-        return implode(' ',$name);
+        return implode(' ', $name);
     }
 }

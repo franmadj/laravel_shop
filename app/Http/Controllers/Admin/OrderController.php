@@ -9,11 +9,18 @@ use App\Models\Order;
 use App\Transformers\OrderNoteTransformer;
 use App\Transformers\OrderTransformer;
 use Carbon\Carbon;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 {
 
-    public function adminStatistics()
+    /**
+     * Returns order for admin analytics data for dashboard
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function adminStatistics():JsonResponse
     {
         try {
             $ordersCount = Order::all();
@@ -31,11 +38,15 @@ class OrderController extends Controller
         }
     }
 
-    public function adminMyOrderStatistics()
+    /**
+     * Returns order for no admin analytics data for dashboard
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function adminMyOrderStatistics():JsonResponse
     {
         try {
             $ordersCount = Auth()->user()->orders;
-
             $data = [
                 'ordersCount' => $ordersCount->count(),
             ];
@@ -45,21 +56,20 @@ class OrderController extends Controller
 
         }
     }
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
 
+    /**
+     * returns a listing of the resource.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function index():JsonResponse
+    {
         try {
-            $orders = new Order;
+            $orders = Order::all();
             if ($search = request('search', '')) {
                 $orders = $orders->where(function ($query) use ($search) {
                     $query->where('title', 'like', "%$search%")->orWhere('content', 'like', "%$search%");
                 });
-                //$products=$products->where('title', 'like', "%$search%")->orWhere('content', 'like', "%$search%");
             }
             if ($status = request('status', '')) {
                 $orders = $orders->where('status', $status);
@@ -71,7 +81,6 @@ class OrderController extends Controller
                 }
                 $orders = $orders->whereBetween('created_at', [$fromDate, $toDate]);
             }
-
             return responder()->success($orders, OrderTransformer::class)->respond(200);
         } catch (\Exception $e) {
             return responder()->error($e->getMessage() . ' ' . $e->getFile() . ' ' . $e->getLine())->respond();
@@ -79,15 +88,14 @@ class OrderController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
+     * returns a listing of the resource for a logged in user .
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function myOrders()
+    public function myOrders():JsonResponse
     {
         try {
-
-            $orders = new Order;
+            $orders = Auth()->user()->orders;
             if ($search = request('search', '')) {
                 $orders = $orders->where(function ($query) use ($search) {
                     $query->where('title', 'like', "%$search%")->orWhere('content', 'like', "%$search%");
@@ -115,9 +123,9 @@ class OrderController extends Controller
      * Display the specified resource.
      *
      * @param  \App\Models\Order  $order
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function myOrderView(Order $order)
+    public function myOrderView(Order $order):JsonResponse
     {
         try {
             return responder()->success($order, OrderTransformer::class)->respond(200);
@@ -126,34 +134,14 @@ class OrderController extends Controller
         }
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \App\Http\Requests\StoreOrderRequest  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(StoreOrderRequest $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
+     * Returns notes for specific order
      *
      * @param  \App\Models\Order  $order
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function getNotes(Order $order)
+    public function getNotes(Order $order):JsonResponse
     {
         try {
             return responder()->success($order->notes, OrderNoteTransformer::class)->respond(200);
@@ -163,12 +151,12 @@ class OrderController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * returns data for editing the specified resource.
      *
      * @param  \App\Models\Order  $order
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function edit(Order $order)
+    public function edit(Order $order):JsonResponse
     {
         try {
             return responder()->success($order, OrderTransformer::class)->respond(200);
@@ -182,18 +170,16 @@ class OrderController extends Controller
      *
      * @param  \App\Http\Requests\UpdateOrderRequest  $request
      * @param  \App\Models\Order  $order
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function update(UpdateOrderRequest $request, Order $order)
+    public function update(UpdateOrderRequest $request, Order $order):JsonResponse
     {
         try {
             $validated = $request->validated();
             $order->buyer_details = $validated['buyer_details'];
             $order->status = $validated['status'];
             $order->save();
-
             return responder()->success($order)->respond(200);
-
         } catch (\Exception $e) {
             return responder()->error($e->getMessage())->respond();
         }
@@ -207,6 +193,7 @@ class OrderController extends Controller
      */
     public function destroy(Order $order)
     {
-        //
+        $order->delete();
+        return responder()->success(Order::all(), OrderTransformer::class)->respond(200);
     }
 }

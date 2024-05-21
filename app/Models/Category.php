@@ -4,10 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
-use Spatie\Image\Manipulations;
-use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class Category extends Model implements HasMedia
 {
@@ -15,7 +14,13 @@ class Category extends Model implements HasMedia
 
     protected $fillable = ['name', 'slug', 'description'];
 
-    function products(){
+    /**
+     * Get the products of the Model
+     *
+     * @return BelongsToMany
+     */
+    public function products(): BelongsToMany
+    {
         return $this->belongsToMany(Product::class);
     }
 }

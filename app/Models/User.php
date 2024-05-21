@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Image\Manipulations;
@@ -47,14 +48,26 @@ class User extends Authenticatable implements HasMedia
         'email_verified_at' => 'datetime',
     ];
 
-    public function orders()
+    /**
+     * Get the orders for the User
+     *
+     * @return HasMany
+     */
+    public function orders(): HasMany
     {
         return $this->hasMany(Order::class);
     }
 
-    public function getIsAdminAttribute(){
+    /**
+     * Check if user is admin.
+     *
+     * @return bool
+     */
+    public function getIsAdminAttribute(): bool
+    {
         return $this->hasRole('admin');
     }
+
 
     public function registerMediaConversions(Media $media = null): void
     {
@@ -64,10 +77,10 @@ class User extends Authenticatable implements HasMedia
 
     }
 
+
     public function registerMediaCollections(): void
     {
         $this->addMediaCollection('user-photos');
-
 
     }
 }

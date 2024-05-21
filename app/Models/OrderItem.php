@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class OrderItem extends Model
 {
@@ -13,12 +14,22 @@ class OrderItem extends Model
 
     public $timestamps = false;
 
-    public function product()
+    /**
+     * Get the product of the Model
+     *
+     * @return BelongsTo
+     */
+    public function product():BelongsTo
     {
         return $this->belongsTo(Product::class);
     }
 
-    public function order()
+    /**
+     * Get the order of the Model
+     *
+     * @return BelongsTo
+     */
+    public function order():BelongsTo
     {
         return $this->belongsTo(Order::class);
     }

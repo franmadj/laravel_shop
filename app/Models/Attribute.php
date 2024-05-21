@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Attribute extends Model
 {
@@ -11,7 +12,13 @@ class Attribute extends Model
 
     protected $fillable = ['name'];
 
-    function attributeItems(){
+    /**
+     * Get the attributeItems of the Model
+     *
+     * @return HasMany
+     */
+    public function attributeItems(): HasMany
+    {
         return $this->hasMany(AttributeItem::class);
     }
 }

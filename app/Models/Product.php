@@ -5,6 +5,9 @@ namespace App\Models;
 use App\Traits\IsLikable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Spatie\Image\Manipulations;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
@@ -33,22 +36,42 @@ class Product extends Model implements HasMedia
 
     protected $with = ['productable.user'];
 
-    public function productable()
+    /**
+     * Get likes for the product
+     *
+     * @return MorphTo
+     */
+    public function productable(): MorphTo
     {
         return $this->morphTo('productable');
     }
 
-    public function categories()
+    /**
+     * Get categories for the product
+     *
+     * @return BelongsToMany
+     */
+    public function categories(): BelongsToMany
     {
         return $this->belongsToMany(Category::class);
     }
 
-    public function variations()
+    /**
+     * Get variations for the product
+     *
+     * @return HasMany
+     */
+    public function variations(): HasMany
     {
         return $this->hasMany(Variation::class);
     }
 
-    public function getGalleryAttribute()
+    /**
+     * Get the gallery key for the model.
+     *
+     * @return array
+     */
+    public function getGalleryAttribute(): array | bool
     {
         $images = $this->getMedia('gallery');
         //dd($images);

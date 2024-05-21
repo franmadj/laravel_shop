@@ -3,17 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreAttributeItemProductRequest;
 use App\Models\AttributeItemVariation;
+use Illuminate\Http\JsonResponse;
 
 class AttributeItemVariationController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function index()
+    public function index():JsonResponse
     {
         try {
             $attr = request('attr', false);
@@ -33,27 +33,6 @@ class AttributeItemVariationController extends Controller
             return responder()->error($e->getMessage())->respond();
         }
 
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \App\Http\Requests\StoreAttributeItemProductRequest  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(StoreAttributeItemProductRequest $request)
-    {
-        //
     }
 
 }

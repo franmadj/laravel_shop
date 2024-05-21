@@ -7,15 +7,16 @@ use App\Http\Requests\StoreAttributeItemRequest;
 use App\Http\Requests\UpdateAttributeItemRequest;
 use App\Models\AttributeItem;
 use App\Transformers\AttributeItemTransformer;
+use Illuminate\Http\JsonResponse;
 
 class AttributeItemController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Return a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($attributeId)
+    public function index($attributeId):JsonResponse
     {
         try {
             return responder()->success(AttributeItem::where('attribute_id', $attributeId), AttributeItemTransformer::class)->respond(201);
@@ -25,22 +26,12 @@ class AttributeItemController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \App\Http\Requests\StoreAttributeItemRequest  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function store(StoreAttributeItemRequest $request)
+    public function store(StoreAttributeItemRequest $request):JsonResponse
     {
         try {
             $validated = $request->validated();
@@ -53,24 +44,14 @@ class AttributeItemController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\AttributeItem  $attributeItem
-     * @return \Illuminate\Http\Response
-     */
-    public function show(AttributeItem $attributeItem)
-    {
-        //
-    }
 
     /**
-     * Show the form for editing the specified resource.
+     * Return data for editing the specified resource.
      *
      * @param  \App\Models\AttributeItem  $attributeItem
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function edit(AttributeItem $attributeItem)
+    public function edit(AttributeItem $attributeItem):JsonResponse
     {
         try {
             return responder()->success($attributeItem, AttributeItemTransformer::class)->respond(201);
@@ -84,14 +65,13 @@ class AttributeItemController extends Controller
      *
      * @param  \App\Http\Requests\UpdateAttributeItemRequest  $request
      * @param  \App\Models\AttributeItem  $attributeItem
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function update(UpdateAttributeItemRequest $request, AttributeItem $attributeItem)
+    public function update(UpdateAttributeItemRequest $request, AttributeItem $attributeItem):JsonResponse
     {
         try {
             $validated = $request->validated();
             if ($attributeItem->update($validated)) {
-
                 return responder()->success()->respond(201);
             }
             return responder()->error()->respond();
@@ -104,9 +84,9 @@ class AttributeItemController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  \App\Models\AttributeItem  $attributeItem
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy(AttributeItem $attributeItem)
+    public function destroy(AttributeItem $attributeItem):JsonResponse
     {
         try {
             $attributeItem->delete();

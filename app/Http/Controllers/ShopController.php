@@ -7,16 +7,16 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Transformers\CategoryTransformer;
 use App\Transformers\ProductTransformer;
-use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 
 class ShopController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Returns a listing of the products in shop page.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function products()
+    public function products():JsonResponse
     {
         try {
             $products = new Product;
@@ -42,7 +42,12 @@ class ShopController extends Controller
         }
     }
 
-    public function categories()
+    /**
+     * Returns a listing of the categories in shop page.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function categories():JsonResponse
     {
         try {
             return responder()->success(Category::all(), CategoryTransformer::class)->respond(201);

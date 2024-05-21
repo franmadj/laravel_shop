@@ -9,11 +9,17 @@ use App\Models\User;
 use App\Transformers\UserTransformer;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Http\JsonResponse;
 
 class UserController extends Controller
 {
 
-    public function adminStatistics()
+    /**
+     * Returns user analytics data for dashboard
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function adminStatistics():JsonResponse
     {
         try {
             $usersCount = User::with('roles')->get()->filter(
@@ -36,7 +42,12 @@ class UserController extends Controller
 
     }
 
-    public function index()
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function index():JsonResponse
     {
         try {
             $users = new User;
@@ -58,11 +69,8 @@ class UserController extends Controller
 
                 });
             }
-
             //dd($users->toSql());
-
             return responder()->success($users->get(), UserTransformer::class)->respond(200);
-
         } catch (Exception $e) {
             return responder()->error($e->getMessage())->respond();
 
@@ -74,9 +82,9 @@ class UserController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \App\Http\Requests\StoreUserRequest  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function store(StoreUserRequest $request)
+    public function store(StoreUserRequest $request):JsonResponse
     {
         try {
             $validated = $request->validated();
@@ -89,7 +97,6 @@ class UserController extends Controller
                         ->toMediaCollection('user-photos');
                 }
                 return responder()->success(['id' => $user->id])->respond(201);
-
             }
         } catch (\Exception $e) {
             return responder()->error($e->getMessage())->respond();
@@ -98,11 +105,11 @@ class UserController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * returns data for editing the logged in user resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function editAccount()
+    public function editAccount():JsonResponse
     {
         try {
             return responder()->success(Auth()->user(), UserTransformer::class)->respond(200);
@@ -115,14 +122,13 @@ class UserController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \App\Http\Requests\UpdateUserRequest  $request
-     * @return \Illuminate\Http\Response
+     * @param  \App\Models\User $user
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function updateAccount(UpdateUserRequest $request, User $user)
+    public function updateAccount(UpdateUserRequest $request, User $user):JsonResponse
     {
         try {
-
             $currentUser = auth()->user();
-
             if ($currentUser == $user) {
                 return new Exception('unauthorized', 403);
             }
@@ -153,9 +159,9 @@ class UserController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  \App\Models\User  $user
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function edit(User $user)
+    public function edit(User $user):JsonResponse
     {
         try {
             return responder()->success($user, UserTransformer::class)->respond(200);
@@ -169,9 +175,9 @@ class UserController extends Controller
      *
      * @param  \App\Http\Requests\UpdateUserRequest  $request
      * @param  \App\Models\User  $user
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function update(UpdateUserRequest $request, User $user)
+    public function update(UpdateUserRequest $request, User $user):JsonResponse
     {
         try {
             $validated = $request->validated();
@@ -200,9 +206,9 @@ class UserController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  \App\Models\User  $user
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy(User $user)
+    public function destroy(User $user):JsonResponse
     {
         try {
             $user->delete();
