@@ -106,15 +106,15 @@ const populateOrders = async (filters) => {
 const confirmDelete = async (id) => {
     const { data, isCanceled } = await dialog.reveal()
     if (isCanceled) return
-    deleteProduct(id)
+    deleteOrder(id)
 }
 
-const deleteProduct = (id) => {
-    axios.delete('/api/admin/product/' + id)
+const deleteOrder = (id) => {
+    axios.delete('/api/admin/order/' + id)
         .then(response => {
             if (response.data.success) {
-                products.value = response.data.data
-                toaster.success(`Product deleted`);
+                orders.value = response.data.data
+                toaster.success(`Order deleted`);
             } else {
                 toaster.error(`Error`);
             }
