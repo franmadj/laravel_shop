@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Foundation\Mix;
 use Spatie\Image\Manipulations;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
@@ -71,7 +72,7 @@ class Product extends Model implements HasMedia
      *
      * @return array
      */
-    public function getGalleryAttribute(): array | bool
+    public function getGalleryAttribute()
     {
         $images = $this->getMedia('gallery');
         //dd($images);

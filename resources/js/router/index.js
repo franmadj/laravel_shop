@@ -1,4 +1,5 @@
 import { createWebHistory, createRouter } from "vue-router";
+
 const Product = () =>
     import ('../Admin/Pages/Product.vue')
 const ProductEdit = () =>
@@ -44,22 +45,6 @@ const Cart = () =>
 const Checkout = () =>
     import ('../Shop/Pages/Checkout.vue')
 
-/*
-import Product from '../Admin/Pages/Product.vue'
-import Products from '../Admin/Pages/Products.vue'
-import Dashboard from '../Admin/Pages/Dashboard.vue'
-import Categories from '../Admin/Pages/Categories.vue'
-import Attributes from '../Admin/Pages/Attributes.vue'
-import Orders from '../Admin/Pages/Orders.vue'
-import Users from '../Admin/Pages/Users.vue'
-import AddUser from '../Admin/Pages/AddUser.vue'
-import Account from '../Admin/Pages/Account.vue'
-
-import Login from '../Auth/Login.vue'
-import Register from '../Auth/Register.vue'
-
-import ShopProduct from '../Shop/Pages/ShopProduct.vue'
-*/
 export const routes = [{
         path: '/',
         component: Shop,

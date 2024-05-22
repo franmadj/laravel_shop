@@ -12,7 +12,6 @@
 
 <script setup>
 import { ref, onMounted, computed } from 'vue'
-import Header from './Admin/components/Header.vue'
 import SidebarMenu from './Admin/components/sidebarMenu.vue'
 
 

@@ -41,7 +41,7 @@
       style="backface-visibility: hidden">
       <img
         src="https://tecdn.b-cdn.net/img/Photos/Slides/img%20(15).jpg"
-        class="block w-full"
+        class="block w-full max-h-96 object-cover"
         alt="..." />
       <div
         class="absolute inset-x-[15%] bottom-5 hidden py-5 text-center text-white md:block">
@@ -58,7 +58,7 @@
       style="backface-visibility: hidden">
       <img
         src="https://tecdn.b-cdn.net/img/Photos/Slides/img%20(22).jpg"
-        class="block w-full"
+        class="block w-full max-h-96 object-cover"
         alt="..." />
       <div
         class="absolute inset-x-[15%] bottom-5 hidden py-5 text-center text-white md:block">
@@ -75,7 +75,7 @@
       style="backface-visibility: hidden">
       <img
         src="https://tecdn.b-cdn.net/img/Photos/Slides/img%20(23).jpg"
-        class="block w-full"
+        class="block w-full max-h-96 object-cover"
         alt="..." />
       <div
         class="absolute inset-x-[15%] bottom-5 hidden py-5 text-center text-white md:block">

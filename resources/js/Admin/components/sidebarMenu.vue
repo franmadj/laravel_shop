@@ -2,7 +2,6 @@
     <!--SIDEBAR-->
     <button type="button" class="block lg:hidden absolute right-2 top-2 w-7" @click="toggleMenu = !toggleMenu">
         <svg class="w-full" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
-            <!-- Font Awesome Pro 5.15.4 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) -->
             <path
                 d="M16 132h416c8.837 0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H16C7.163 60 0 67.163 0 76v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z" />
         </svg>
@@ -22,11 +21,9 @@
 
 
         <ul class="w-full block mx-auto bg-gray-800 h-full">
-
-
             <li class="relative">
                 <router-link
-                    class="peer p-2 bg-gray-800 font-normal text-white hover:bg-gray-700 hover:text-blue-400 border-white border-b flex"
+                    class="peer p-2 bg-gray-800 text-gray-400 hover:bg-gray-700 hover:text-blue-400 border-gray-400 border-b flex"
                     to="/admin">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-1" fill="none" viewBox="0 0 24 24"
                         stroke="currentColor" stroke-width="2">
@@ -38,7 +35,7 @@
                 <ul class="relative left-0 top-0 bg-salte-400 w-full block peer-hover:block hover:block rounded-sm
                 lg:hidden lg:absolute lg:left-full lg:w-fit">
                     <li>
-                        <router-link class="whitespace-nowrap p-2 bg-gray-800 font-normal text-white block hover:bg-gray-700 hover:text-blue-400 border-white border-b rounded-sm px-5
+                        <router-link class="whitespace-nowrap p-2 bg-gray-800 text-gray-400 block hover:bg-gray-700 hover:text-blue-400 border-gray-400 border-b rounded-sm px-5
                             pl-10 lg:pl-2" to="/">View Site</router-link>
                     </li>
 
@@ -48,7 +45,7 @@
 
             <li v-if="isAdmin" class="relative">
                 <router-link
-                    class="peer p-2 bg-gray-800 font-normal text-white hover:bg-gray-700 hover:text-blue-400 border-white border-b flex"
+                    class="peer p-2 bg-gray-800 text-gray-400 hover:bg-gray-700 hover:text-blue-400 border-gray-400 border-b flex"
                     to="/admin/products">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-1" fill="none" viewBox="0 0 24 24"
                         stroke="currentColor" stroke-width="2">
@@ -60,19 +57,19 @@
                 <ul class="relative left-0 top-0 bg-salte-400 w-full block peer-hover:block hover:block rounded-sm
                 lg:hidden lg:absolute lg:left-full lg:w-fit">
                     <li>
-                        <router-link class="whitespace-nowrap p-2 bg-gray-800 font-normal text-white block hover:bg-gray-700 hover:text-blue-400 border-white border-b rounded-sm px-5
+                        <router-link class="whitespace-nowrap p-2 bg-gray-800 text-gray-400 block hover:bg-gray-700 hover:text-blue-400 border-gray-400 border-b rounded-sm px-5
                             pl-10 lg:pl-2" to="/admin/products">All products</router-link>
                     </li>
                     <li>
-                        <router-link class="whitespace-nowrap p-2 bg-gray-800 font-normal text-white block hover:bg-gray-700 hover:text-blue-400 border-white border-b rounded-sm px-5
+                        <router-link class="whitespace-nowrap p-2 bg-gray-800 text-gray-400 block hover:bg-gray-700 hover:text-blue-400 border-gray-400 border-b rounded-sm px-5
                             pl-10 lg:pl-2" to="/admin/product">Add products</router-link>
                     </li>
                     <li>
-                        <router-link class="whitespace-nowrap p-2 bg-gray-800 font-normal text-white block hover:bg-gray-700 hover:text-blue-400 border-white border-b rounded-sm px-5
+                        <router-link class="whitespace-nowrap p-2 bg-gray-800 text-gray-400 block hover:bg-gray-700 hover:text-blue-400 border-gray-400 border-b rounded-sm px-5
                             pl-10 lg:pl-2" to="/admin/categories">Categories</router-link>
                     </li>
                     <li>
-                        <router-link class="whitespace-nowrap p-2 bg-gray-800 font-normal text-white block hover:bg-gray-700 hover:text-blue-400 border-white border-b rounded-sm px-5
+                        <router-link class="whitespace-nowrap p-2 bg-gray-800 text-gray-400 block hover:bg-gray-700 hover:text-blue-400 border-gray-400 border-b rounded-sm px-5
                             pl-10 lg:pl-2" to="/admin/attributes">Attributes</router-link>
                     </li>
                 </ul>
@@ -80,7 +77,7 @@
 
 
             <li v-if="isAdmin" class="relative">
-                <a class="peer p-2 bg-gray-800 font-normal text-white hover:bg-gray-700 hover:text-blue-400 border-white border-b flex"
+                <a class="peer p-2 bg-gray-800 text-gray-400 hover:bg-gray-700 hover:text-blue-400 border-gray-400 border-b flex"
                     href="/">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-1" fill="none" viewBox="0 0 24 24"
                         stroke="currentColor" stroke-width="2">
@@ -92,11 +89,11 @@
                 <ul class="relative left-0 top-0 bg-salte-400 w-full block peer-hover:block hover:block rounded-sm 
                 lg:hidden lg:absolute lg:left-full lg:w-fit">
                     <li>
-                        <router-link class="whitespace-nowrap p-2 bg-gray-800 font-normal text-white block hover:bg-gray-700 hover:text-blue-400 border-white border-b rounded-sm px-5
+                        <router-link class="whitespace-nowrap p-2 bg-gray-800 text-gray-400 block hover:bg-gray-700 hover:text-blue-400 border-gray-400 border-b rounded-sm px-5
                             pl-10 lg:pl-2" to="/admin/orders">Orders</router-link>
                     </li>
                     <li>
-                        <router-link class="whitespace-nowrap p-2 bg-gray-800 font-normal text-white block hover:bg-gray-700 hover:text-blue-400 border-white border-b rounded-sm px-5
+                        <router-link class="whitespace-nowrap p-2 bg-gray-800 text-gray-400 block hover:bg-gray-700 hover:text-blue-400 border-gray-400 border-b rounded-sm px-5
                             pl-10 lg:pl-2" to="/admin/settings">Settings</router-link>
                     </li>
 
@@ -105,7 +102,7 @@
 
 
             <li v-if="isAdmin" class="relative">
-                <a class="peer p-2 bg-gray-800 font-normal text-white hover:bg-gray-700 hover:text-blue-400 border-white border-b flex"
+                <a class="peer p-2 bg-gray-800 text-gray-400 hover:bg-gray-700 hover:text-blue-400 border-gray-400 border-b flex"
                     href="#">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-1" fill="none" viewBox="0 0 24 24"
                         stroke="currentColor" stroke-width="2">
@@ -117,11 +114,11 @@
                 <ul class="relative left-0 top-0 bg-salte-400 w-full block peer-hover:block hover:block rounded-sm 
                 lg:hidden lg:absolute lg:left-full lg:w-fit">
                     <li>
-                        <router-link class="whitespace-nowrap p-2 bg-gray-800 font-normal text-white block hover:bg-gray-700 hover:text-blue-400 border-white border-b rounded-sm px-5
+                        <router-link class="whitespace-nowrap p-2 bg-gray-800 text-gray-400 block hover:bg-gray-700 hover:text-blue-400 border-gray-400 border-b rounded-sm px-5
                             pl-10 lg:pl-2" to="/admin/users">Users</router-link>
                     </li>
                     <li>
-                        <router-link class="whitespace-nowrap p-2 bg-gray-800 font-normal text-white block hover:bg-gray-700 hover:text-blue-400 border-white border-b rounded-sm px-5
+                        <router-link class="whitespace-nowrap p-2 bg-gray-800 text-gray-400 block hover:bg-gray-700 hover:text-blue-400 border-gray-400 border-b rounded-sm px-5
                             pl-10 lg:pl-2" to="/admin/add-user">Add User</router-link>
                     </li>
 
@@ -130,7 +127,7 @@
 
 
             <li class="relative">
-                <a class="peer p-2 bg-gray-800 font-normal text-white hover:bg-gray-700 hover:text-blue-400 border-white border-b flex"
+                <a class="peer p-2 bg-gray-800 text-gray-400 hover:bg-gray-700 hover:text-blue-400 border-gray-400 border-b flex"
                     href="#">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-1" fill="none" viewBox="0 0 24 24"
                         stroke="currentColor" stroke-width="2">
@@ -142,7 +139,7 @@
                 <ul class="relative left-0 top-0 bg-salte-400 w-full block peer-hover:block hover:block rounded-sm 
                 lg:hidden lg:absolute lg:left-full lg:w-fit">
                     <li>
-                        <router-link class="whitespace-nowrap p-2 bg-gray-800 font-normal text-white block hover:bg-gray-700 hover:text-blue-400 border-white border-b rounded-sm px-5
+                        <router-link class="whitespace-nowrap p-2 bg-gray-800 text-gray-400 block hover:bg-gray-700 hover:text-blue-400 border-gray-400 border-b rounded-sm px-5
                             pl-10 lg:pl-2" to="/admin/my-orders">List</router-link>
                     </li>
                     
@@ -151,7 +148,7 @@
             </li>
 
             <li class="relative">
-                <a class="peer p-2 bg-gray-800 font-normal text-white hover:bg-gray-700 hover:text-blue-400 border-white border-b flex"
+                <a class="peer p-2 bg-gray-800 text-gray-400 hover:bg-gray-700 hover:text-blue-400 border-gray-400 border-b flex"
                     href="#">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-1" fill="none" viewBox="0 0 24 24"
                         stroke="currentColor" stroke-width="2">
@@ -163,11 +160,11 @@
                 <ul class="relative left-0 top-0 bg-salte-400 w-full block peer-hover:block hover:block rounded-sm 
                 lg:hidden lg:absolute lg:left-full lg:w-fit">
                     <li>
-                        <router-link class="whitespace-nowrap p-2 bg-gray-800 font-normal text-white block hover:bg-gray-700 hover:text-blue-400 border-white border-b rounded-sm px-5
+                        <router-link class="whitespace-nowrap p-2 bg-gray-800 text-gray-400 block hover:bg-gray-700 hover:text-blue-400 border-gray-400 border-b rounded-sm px-5
                             pl-10 lg:pl-2" to="/admin/account">Profile</router-link>
                     </li>
                     <li>
-                        <a class="whitespace-nowrap p-2 bg-gray-800 font-normal text-white block hover:bg-gray-700 hover:text-blue-400 border-white border-b rounded-sm px-5
+                        <a class="whitespace-nowrap p-2 bg-gray-800 text-gray-400 block hover:bg-gray-700 hover:text-blue-400 border-gray-400 border-b rounded-sm px-5
                         pl-10 lg:pl-2" href="#" @click="logout">Log Out</a>
                     </li>
 
