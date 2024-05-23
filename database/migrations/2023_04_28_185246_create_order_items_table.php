@@ -17,9 +17,7 @@ class CreateOrderItemsTable extends Migration
             $table->id();
             $table->string('title');
             $table->bigInteger('order_id')->unsigned();
-            $table->foreign('order_id')->references('id')->on('orders')->onDelete('cascade');
             $table->bigInteger('product_id')->unsigned();
-            $table->foreign('product_id')->references('id')->on('products');
             $table->enum('type',['simple','variation'])->default('simple');
             $table->bigInteger('variation_id')->unsigned()->nullable();
             $table->float('price',7,2)->default(0);
