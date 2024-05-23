@@ -38,9 +38,7 @@
         <li><a href="#installation">Installation</a></li>
       </ul>
     </li>
-    <li><a href="#usage">Usage</a></li>
-    <li><a href="#license">License</a></li>
-    <li><a href="#contact">Contact</a></li>
+
     
   </ol>
 </details>
@@ -50,7 +48,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-Just simple example e commerce for demonstration proposes.
+Just simple example e commerce for demonstration purposes.
 ## Front End
 ![Front End](public/images/capture1.png)
 <br/>
