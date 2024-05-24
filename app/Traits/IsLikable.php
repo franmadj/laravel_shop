@@ -66,7 +66,7 @@ trait IsLikable
         }
     }
 
-    public function likeExists(int $userId): Model
+    public function likeExists(int $userId)
     {
         $reflect = new ReflectionClass($this);
 
