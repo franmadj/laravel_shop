@@ -142,7 +142,15 @@ php artisan storage:link
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
-
+## Admin Credentials
+Admin: 
+```bash 
+admin@mail.com
+```
+Password: 
+```bash
+webmaster
+```
 
 
 ## If you like our project please leave a star ❤
