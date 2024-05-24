@@ -2,8 +2,8 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Category;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Str;
 
 class StoreProductRequest extends FormRequest
 {
@@ -25,6 +25,16 @@ class StoreProductRequest extends FormRequest
     public function rules()
     {
         return [
+            'categories' => [
+                'required',
+                'array',
+                function ($attribute, $categories, $fail) {
+                    $count = Category::whereIn('id', $categories)->count();
+                    if (count($categories) != $count) {
+                        $fail('The ' . $attribute . ' is invalid.');
+                    }
+                },
+            ],
             'title' => 'required|max:255|unique:products,title',
             'content' => 'nullable',
             'slug' => 'required|max:255|unique:products,slug',
@@ -33,6 +43,7 @@ class StoreProductRequest extends FormRequest
             'price' => 'required|numeric',
             'sale_price' => 'nullable|numeric',
             'stock_quantity' => 'nullable|numeric',
+
         ];
     }
 
@@ -56,9 +67,9 @@ class StoreProductRequest extends FormRequest
      * @return void
      */
     /* protected function prepareForValidation()
-    {
-        $this->merge([
-            'slug' => Str::slug($this->slug),
-        ]);
-    } */
+{
+$this->merge([
+'slug' => Str::slug($this->slug),
+]);
+} */
 }
