@@ -15,10 +15,10 @@
                         <p>Back to shop</p>
 
                     </router-link>
-                    <div class="w-full bg-black px-5 py-8 text-white text-center rounded-sm">
+                    <div class="w-full dark:bg-gray-800 dark:border-gray-600 px-5 py-8  dark:text-gray-400 text-center rounded-sm">
                         <h1 class="uppercase mb-5 text-3xl">Your Cart <span class="text-gray-500">({{ cartQuantity }})</span></h1>
                         <table class="w-full">
-                            <tr class="border-t border-white border-b">
+                            <tr class="border-t dark:border-gray-600 border-b">
                                 <th class="text-center uppercase p-3">Item</th>
                                 <th class="text-center uppercase p-3">Amount</th>
                                 <th class="text-center uppercase p-3">qty</th>
@@ -39,8 +39,9 @@
                                 <th class="font-normal p-3">
                                     <svg class="cursor-pointer w-4 text-white block mx-auto" @click="removeItem(index)"
                                         xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 448 512"><!-- Font Awesome Pro 5.15.4 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) -->
-                                        <path fill="#fff"
+                                        viewBox="0 0 448 512">
+                                        
+                                        <path fill="#9CA3AF"
                                             d="M32 464a48 48 0 0 0 48 48h288a48 48 0 0 0 48-48V128H32zm272-256a16 16 0 0 1 32 0v224a16 16 0 0 1-32 0zm-96 0a16 16 0 0 1 32 0v224a16 16 0 0 1-32 0zm-96 0a16 16 0 0 1 32 0v224a16 16 0 0 1-32 0zM432 32H312l-9.4-18.7A24 24 0 0 0 281.1 0H166.8a23.72 23.72 0 0 0-21.4 13.3L136 32H16A16 16 0 0 0 0 48v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16z" />
                                     </svg>
                                 </th>
@@ -60,7 +61,7 @@
                     </div>
                     <div class="text-right mt-5">
                         <router-link to="/checkout"
-                            class="bg-black text-white inline-block px-6 py-2.5 font-medium text-xs leading-tight uppercase rounded shadow-md w-fit">
+                            class="dark:bg-gray-800 dark:border-gray-600 dark:text-gray-400 inline-block px-6 py-2.5 font-medium text-xs leading-tight uppercase rounded shadow-md w-fit">
                             Go Continue Checkout
                         </router-link>
                     </div>

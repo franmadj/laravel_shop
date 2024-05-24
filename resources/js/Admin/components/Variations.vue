@@ -83,8 +83,8 @@
     <custom-modal v-model="showModal" @confirm="confirmModal" @cancel="cancelModal">
         <template v-slot:title>Hello, vue-final-modal</template>
         <ul v-for="(variation, vi) of variations.possibilities" :key="vi"
-            class="flex gap-1 bg-slate-100 mb-1 py-2 hover:bg-slate-200 cursor-pointer"
-            :class="{ 'bg-green-200': variation.added }" @click="variation.added = !variation.added">
+            class="flex gap-1 mb-1 py-2 hover:bg-slate-200 cursor-pointer"
+            :class="{ 'bg-green-200': variation.added, 'bg-slate-100': !variation.added }" @click="variation.added = !variation.added">
             <li class="p-2 flex justify-center w-1/2" v-for="(item, index) of variation.items" :key="index">{{ item.name }}</li>
         </ul>
     </custom-modal>

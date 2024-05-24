@@ -60,7 +60,7 @@
                     </ul>
                 </li>
 
-                <li class="pl-3 inline-block no-underline hover:text-black relative" href="#">
+                <li class="pl-3 inline-block no-underline hover:text-black static sm:relative" href="#">
                     <a href="#" @click.prevent="openCartPreview" class="relative">
                         <span
                             class="absolute rounded-full text-center bg-red-500 text-white p-1 w-5 h-5 -top-2 -right-2 leading-3 fs-10">{{
@@ -75,7 +75,7 @@
                         </svg>
                     </a>
                     <div v-show="cartPreview" id="contentCartPreview"
-                        class="absolute border rounded-lg border-gray-400 z-20 min-w-[240px] right-0 bg-white">
+                        class="absolute border rounded border-gray-400 z-20 sm:min-w-[340px] w-full right-0 bg-white">
                         <h3 class="flex justify-center gap-2 pt-5 pb-3 text-xl">Your Cart 
                             <svg class="text-white w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!-- Font Awesome Pro 5.15.4 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) --><path d="M528.12 301.319l47.273-208C578.806 78.301 567.391 64 551.99 64H159.208l-9.166-44.81C147.758 8.021 137.93 0 126.529 0H24C10.745 0 0 10.745 0 24v16c0 13.255 10.745 24 24 24h69.883l70.248 343.435C147.325 417.1 136 435.222 136 456c0 30.928 25.072 56 56 56s56-25.072 56-56c0-15.674-6.447-29.835-16.824-40h209.647C430.447 426.165 424 440.326 424 456c0 30.928 25.072 56 56 56s56-25.072 56-56c0-22.172-12.888-41.332-31.579-50.405l5.517-24.276c3.413-15.018-8.002-29.319-23.403-29.319H218.117l-6.545-32h293.145c11.206 0 20.92-7.754 23.403-18.681z"/></svg></h3>
                         <ul v-if="cartItems.length">
@@ -88,17 +88,17 @@
                             <li class="p-2 text-right">Total: <span class="font-bold">{{ cartTotal }}</span></li>
                             <li class="p-2">
                                 <router-link to="/cart"
-                                    class="bg-black text-white text-center inline-block px-6 py-2.5 font-medium text-xs leading-tight uppercase rounded shadow-md w-full">Go
+                                    class="dark:bg-gray-800 dark:border-gray-600  dark:text-gray-400 text-center inline-block px-6 py-2.5 font-medium text-xs leading-tight uppercase rounded shadow-md w-full">Go
                                     To yout cart</router-link>
                             </li>
                             <li class="p-2">
                                 <router-link to="/checkout"
-                                    class="bg-black text-white text-center inline-block px-6 py-2.5 font-medium text-xs leading-tight uppercase rounded shadow-md w-full">
+                                    class="dark:bg-gray-800 dark:border-gray-600  dark:text-gray-400 text-center inline-block px-6 py-2.5 font-medium text-xs leading-tight uppercase rounded shadow-md w-full">
                                     Checkout</router-link>
                             </li>
                             <li class="p-2">
                                 <button type="button" @click="emptyCart"
-                                    class="bg-black text-white inline-block px-6 py-2.5 font-medium text-xs leading-tight uppercase rounded shadow-md w-full">Empty
+                                    class="dark:bg-gray-800 dark:border-gray-600 dark:text-gray-400 inline-block px-6 py-2.5 font-medium text-xs leading-tight uppercase rounded shadow-md w-full">Empty
                                     Cart</button>
                             </li>
 

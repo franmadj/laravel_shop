@@ -106,7 +106,8 @@
                     </div>
 
                     
-                    <button class="px-2 py-1 bg-blue-700 block w-full rounded-sm text-white" type="button"
+                    <button class="px-2 py-1 block w-full rounded-sm text-white" type="button" 
+                    :class="{ 'bg-blue-700': !saving, 'bg-blue-400': saving }" :disabled="saving"
                         @click="update()">Update
                         Product</button>
 
@@ -137,6 +138,7 @@ const product = ref({ type: 'simple', status: 'published', stock_status: 'in_sto
 let categories = ref([])
 let filesDefault = reactive([])
 let galleryDefault = reactive([])
+const saving = ref(false);
 
 let galleryon=ref(true)
 
@@ -218,6 +220,7 @@ const resetForm = async () => {
 }
 
 const update = async () => {
+    saving.value = true;
     console.log('update')
 
     console.log('product.value', product.value);
@@ -266,14 +269,16 @@ const update = async () => {
     axios.post('/api/admin/product/' + props.id, formData)
         .then(response => {
             if (response.data.success) {
-
                 toaster.success(`Product updated`);
+                saving.value = false;
             } else {
                 toaster.error(`Error`);
+                saving.value = false;
             }
         })
         .catch(function (error) {
             toaster.error(error);
+            saving.value = false;
         });
 
 

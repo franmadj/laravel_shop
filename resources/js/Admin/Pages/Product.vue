@@ -72,8 +72,8 @@
                     <div class="mb-4" v-if="product.type == 'variable'">
                         <p class="text-2xl">Variations</p>
                         <div class="border border-gray-400 rounded-sm p-2 mt-2">
-                            <button type="button" class="px-2 py-1 bg-gray-800 block w-full rounded-sm text-white"
-                                @click="store">Save product before add variations</button>
+                            <button type="button" class="px-2 py-1 bg-red-800 block w-full rounded-sm text-white">Save
+                                product before add variations</button>
                         </div>
                     </div>
 
@@ -108,8 +108,8 @@
                             :filesDefault="filesDefault" :maxFiles="1" name="featureImage" />
                     </div>
 
-                    <button class="px-2 py-1 bg-blue-700 block w-full rounded-sm text-white" type="button"
-                        @click="store()">Save
+                    <button class="px-2 py-1 block w-full rounded-sm text-white" type="button"
+                        :class="{ 'bg-blue-700': !saving, 'bg-blue-400': saving }" :disabled="saving" @click="store()">Save
                         Product</button>
                 </div>
             </form>
@@ -133,6 +133,7 @@ const product = ref({ type: 'simple', status: 'published', stock_status: 'in_sto
 
 let categories = ref([])
 const router = useRouter()
+const saving = ref(false);
 
 
 onMounted(() => {
@@ -175,17 +176,22 @@ const galleryUpdated = (files) => {
 // }
 
 const store = async () => {
+    saving.value = true;
 
     console.log('product.value', product.value);
 
     let formData = new FormData()
-    formData.append('title', product.value.title)
-    formData.append('type', product.value.type)
-    formData.append('price', product.value.price)
-    formData.append('slug', product.value.slug)
+
     formData.append('stock_status', product.value.stock_status)
     formData.append('status', product.value.status)
+    formData.append('type', product.value.type)
 
+    if (product.value.title)
+        formData.append('title', product.value.title)
+    if (product.value.price)
+        formData.append('price', product.value.price)
+    if (product.value.slug)
+        formData.append('slug', product.value.slug)
     if (product.value.content)
         formData.append('content', product.value.content)
     if (product.value.sale_price)
@@ -210,6 +216,7 @@ const store = async () => {
             formData.append('gallery[]', file.file)
         })
     }
+    console.log(formData);
     axios.post('/api/admin/product', formData)
         .then(response => {
             if (response.data.success) {
@@ -217,11 +224,13 @@ const store = async () => {
                 router.push('/admin/product/' + response.data.data.id)
             } else {
                 toaster.error(`Error`);
+                saving.value = false;
             }
         })
         .catch(function (error) {
             console.log(error)
             toaster.error(helpers.makeTextErrors(error));
+            saving.value = false;
         });
 }
 
